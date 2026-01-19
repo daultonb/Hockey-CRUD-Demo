@@ -1,0 +1,81 @@
+name: Keep Application Alive
+
+on:
+  schedule:
+    # Run every Tuesday at 10:00 AM UTC (2:00 AM PST)
+    - cron: '0 10 * * 2'
+    # Run every Thursday at 10:00 AM UTC (2:00 AM PST)
+    - cron: '0 10 * * 4'
+  workflow_dispatch: # Allow manual triggering from GitHub Actions tab
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Keep Frontend Alive
+        run: |
+          echo "🌐 Pinging frontend at hockey.daultonb.com..."
+          curl -f -s -o /dev/null -w "Frontend Status: %{http_code}\n" https://hockey.daultonb.com || echo "Frontend request failed"
+
+      - name: Keep Backend Alive - Health Check
+        run: |
+          echo "🔧 Pinging backend health endpoint..."
+          curl -f -s https://hockey-player-crud-demo-production.up.railway.app/ || echo "Backend health check failed"
+
+      - name: Keep Database Active - Fetch Teams
+        run: |
+          echo "🏒 Fetching teams from database..."
+          response=$(curl -s -w "\n%{http_code}" https://hockey-player-crud-demo-production.up.railway.app/teams)
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+
+          if [ "$http_code" = "200" ]; then
+            team_count=$(echo "$body" | jq '. | length')
+            echo "✅ Successfully fetched $team_count teams from database"
+          else
+            echo "❌ Failed to fetch teams"
+            exit 1
+          fi
+
+      - name: Keep Database Active - Fetch Players
+        run: |
+          echo "👥 Fetching players from database..."
+          response=$(curl -s -w "\n%{http_code}" "https://hockey-player-crud-demo-production.up.railway.app/players?page=1&limit=10")
+          http_code=$(echo "$response" | tail -n1)
+          body=$(echo "$response" | sed '$d')
+
+          echo "HTTP Status: $http_code"
+
+          if [ "$http_code" = "200" ]; then
+            player_count=$(echo "$body" | jq '.count')
+            echo "✅ Successfully fetched players. Total count: $player_count"
+          else
+            echo "❌ Failed to fetch players"
+            exit 1
+          fi
+
+      - name: Keep Database Active - Search Query
+        run: |
+          echo "🔍 Performing search query to exercise database..."
+          curl -f -s "https://hockey-player-crud-demo-production.up.railway.app/players?search=Connor&search_field=name&page=1&limit=5" > /dev/null || echo "Search query failed"
+
+      - name: Summary
+        if: always()
+        run: |
+          echo "════════════════════════════════════════"
+          echo "   Keep-Alive Job Complete"
+          echo "════════════════════════════════════════"
+          echo "✅ Frontend pinged"
+          echo "✅ Backend health checked"
+          echo "✅ Database queries executed"
+          echo "✅ Neon PostgreSQL kept active"
+          echo "✅ Railway backend kept active"
+          echo ""
+          echo "Next scheduled run: Check GitHub Actions tab"
+          echo "════════════════════════════════════════"
