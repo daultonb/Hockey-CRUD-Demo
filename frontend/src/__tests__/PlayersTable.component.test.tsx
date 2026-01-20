@@ -12,6 +12,8 @@ import {
   SearchField,
 } from "../types/Player";
 
+/* eslint-disable no-console */
+
 // Mock axios with proper Jest pattern
 jest.mock("axios", () => ({
   get: jest.fn(),
@@ -1143,21 +1145,19 @@ describe("PlayersTable Component", () => {
     });
 
     /*
-     * Tests console error logging when API calls fail
-     * Expected: Errors are logged for debugging purposes
+     * Tests error state when API calls fail
+     * Expected: Error message is displayed to user
      */
-    test("logs errors to console when API calls fail", async () => {
-      const mockError = new Error("Network error");
+    test("shows error state when API calls fail", async () => {
       mockedAxios.get.mockResolvedValueOnce({ data: mockColumnMetadata });
-      mockedAxios.get.mockRejectedValueOnce(mockError);
+      mockedAxios.get.mockRejectedValueOnce(new Error("Network error"));
 
       renderPlayersTable();
 
       await waitFor(() => {
-        expect(console.error).toHaveBeenCalledWith(
-          "Error initializing data:",
-          mockError
-        );
+        expect(
+          screen.getByText("Failed to load data. Please try again later.")
+        ).toBeInTheDocument();
       });
     });
 

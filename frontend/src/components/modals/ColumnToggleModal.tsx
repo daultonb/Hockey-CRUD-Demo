@@ -221,14 +221,11 @@ const ColumnToggleModal: React.FC<ColumnToggleModalProps> = React.memo(
           setAvailableColumns(response.data.columns);
           setDataSource("backend");
         } else {
-          console.warn("Invalid response format from column-metadata endpoint");
+          // Invalid response format, fall back to cached columns
           setDataSource("fallback");
         }
-      } catch (error) {
-        console.warn(
-          "Failed to fetch column metadata from backend, using fallback:",
-          error
-        );
+      } catch {
+        // Failed to fetch column metadata, using fallback
         setDataSource("fallback");
       } finally {
         setIsLoading(false);

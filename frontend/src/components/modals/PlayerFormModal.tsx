@@ -102,8 +102,7 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
       try {
         const response = await axios.get<Team[]>(`${apiBaseUrl}/teams`);
         setTeams(response.data);
-      } catch (error) {
-        console.error("Error fetching teams:", error);
+      } catch {
         showToast("Failed to load teams", "error");
       }
     };
@@ -263,8 +262,6 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
     async (e: React.FormEvent) => {
       e.preventDefault();
 
-      // validateForm is intentionally not in dependencies to avoid unnecessary re-renders
-      // eslint-disable-next-line react-hooks/exhaustive-deps
       if (!validateForm()) {
         showToast("Please fix the form errors", "error");
         return;
@@ -314,16 +311,19 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
 
         onSuccess();
         onClose();
-      } catch (error: any) {
-        console.error("Error submitting player:", error);
+      } catch (error: unknown) {
+        const axiosError = error as {
+          response?: { data?: { detail?: string } };
+        };
         const errorMessage =
-          error.response?.data?.detail ||
+          axiosError.response?.data?.detail ||
           `Failed to ${mode === "add" ? "add" : "update"} player`;
         showToast(errorMessage, "error");
       } finally {
         setSubmitting(false);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [
       formData,
       showPlayoffFields,

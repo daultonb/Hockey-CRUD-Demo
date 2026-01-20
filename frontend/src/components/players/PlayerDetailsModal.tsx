@@ -30,8 +30,7 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
         month: "long",
         day: "numeric",
       });
-    } catch (error) {
-      console.warn("PlayerDetailsModal: Invalid date format:", dateString);
+    } catch {
       return dateString;
     }
   };

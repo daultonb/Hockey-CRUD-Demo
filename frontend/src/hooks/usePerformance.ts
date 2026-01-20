@@ -20,13 +20,16 @@ export function useComponentPerformance(componentName: string) {
     mountTime.current = performance.now();
     PerformanceMonitor.log(`${componentName} - MOUNTED`);
 
+    // Capture current render count for cleanup
+    const currentRenderCount = renderCount.current;
+
     return () => {
       // Component unmounted
       const lifetime = performance.now() - mountTime.current;
       PerformanceMonitor.log(
-        `${componentName} - UNMOUNTED (lived ${lifetime.toFixed(0)}ms, ${
-          renderCount.current
-        } renders)`
+        `${componentName} - UNMOUNTED (lived ${lifetime.toFixed(
+          0
+        )}ms, ${currentRenderCount} renders)`
       );
     };
   }, [componentName]);

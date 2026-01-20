@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import Toast from "../components/Toast";
 
@@ -39,34 +39,28 @@ describe("Toast Component", () => {
   describe("Toast Types", () => {
     it("should render success toast with correct class and icon", () => {
       const onClose = jest.fn();
-      const { container } = render(
-        <Toast message="Success!" type="success" onClose={onClose} />
-      );
+      render(<Toast message="Success!" type="success" onClose={onClose} />);
 
-      const toast = container.querySelector(".toast-success");
-      expect(toast).toBeInTheDocument();
+      const toast = screen.getByRole("alert");
+      expect(toast).toHaveClass("toast-success");
       expect(screen.getByText("✓")).toBeInTheDocument();
     });
 
     it("should render error toast with correct class and icon", () => {
       const onClose = jest.fn();
-      const { container } = render(
-        <Toast message="Error occurred" type="error" onClose={onClose} />
-      );
+      render(<Toast message="Error occurred" type="error" onClose={onClose} />);
 
-      const toast = container.querySelector(".toast-error");
-      expect(toast).toBeInTheDocument();
+      const toast = screen.getByRole("alert");
+      expect(toast).toHaveClass("toast-error");
       expect(screen.getByText("✕")).toBeInTheDocument();
     });
 
     it("should render info toast with correct class and icon", () => {
       const onClose = jest.fn();
-      const { container } = render(
-        <Toast message="Info message" type="info" onClose={onClose} />
-      );
+      render(<Toast message="Info message" type="info" onClose={onClose} />);
 
-      const toast = container.querySelector(".toast-info");
-      expect(toast).toBeInTheDocument();
+      const toast = screen.getByRole("alert");
+      expect(toast).toHaveClass("toast-info");
       expect(screen.getByText("i")).toBeInTheDocument();
     });
   });
@@ -144,7 +138,7 @@ describe("Toast Component", () => {
       const onClose2 = jest.fn();
       const onClose3 = jest.fn();
 
-      const { container } = render(
+      render(
         <div>
           <Toast message="Success!" type="success" onClose={onClose1} />
           <Toast message="Error!" type="error" onClose={onClose2} />
@@ -156,9 +150,11 @@ describe("Toast Component", () => {
       expect(screen.getByText("Error!")).toBeInTheDocument();
       expect(screen.getByText("Info!")).toBeInTheDocument();
 
-      expect(container.querySelectorAll(".toast-success")).toHaveLength(1);
-      expect(container.querySelectorAll(".toast-error")).toHaveLength(1);
-      expect(container.querySelectorAll(".toast-info")).toHaveLength(1);
+      const alerts = screen.getAllByRole("alert");
+      expect(alerts).toHaveLength(3);
+      expect(alerts[0]).toHaveClass("toast-success");
+      expect(alerts[1]).toHaveClass("toast-error");
+      expect(alerts[2]).toHaveClass("toast-info");
     });
 
     it("should handle each toast auto-dismiss independently", () => {

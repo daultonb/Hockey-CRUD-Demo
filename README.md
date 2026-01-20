@@ -5,6 +5,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 ## 🏒 Features
 
 ### Player Management
+
 - **Complete CRUD Operations**: Create, Read, Update, and Delete players with full validation
 - **Add Players**: Modal form with required fields (name, jersey, position, team, nationality, birthdate, height, weight, handedness, active status)
 - **Edit Players**: Update existing player information with pre-populated forms
@@ -12,12 +13,14 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Player Details**: Comprehensive modal view showing all player information and statistics
 
 ### Statistics Tracking
+
 - **Regular Season Stats**: Games played, goals, assists, and auto-calculated points
 - **Playoff Stats**: Separate playoff statistics tracking
 - **Combined Stats**: Automatically calculated total statistics
 - **Auto-Calculation**: Points fields automatically calculated from goals + assists
 
 ### Search & Filtering
+
 - **Advanced Search**: Search across all fields or specific fields (name, position, team, nationality, jersey number)
 - **String Matching Modes**:
   - Contains (default) - Case-insensitive substring matching
@@ -28,12 +31,14 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Filter Persistence**: Maintains filters while navigating
 
 ### Sorting & Pagination
+
 - **Multi-Column Sorting**: Sort by any column with ascending/descending order
 - **Visual Indicators**: Sort direction arrows on column headers
 - **Flexible Pagination**: Configurable items per page (10, 20, 50, 100)
 - **Smart Navigation**: Page controls with total page count
 
 ### User Experience
+
 - **Toast Notifications**: Success and error messages for all operations
 - **Responsive Design**: Professional UI that works on all devices
 - **Dark Theme**: Modern dark color scheme with proper contrast
@@ -41,6 +46,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Loading States**: Clear loading indicators during API calls
 
 ### Performance & Caching
+
 - **Redis Caching**: High-performance caching layer for frequently accessed data
 - **Configurable TTL**: Cache time-to-live settings (default: 5 minutes)
 - **Cache Invalidation**: Automatic cache clearing on data mutations
@@ -48,6 +54,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Connection Pooling**: Efficient Redis connection management
 
 ### Security & Rate Limiting
+
 - **API Rate Limiting**: Prevents abuse with configurable request limits
 - **Per-IP Tracking**: 100 requests per minute per IP address (configurable)
 - **Redis-Backed**: Uses Redis for distributed rate limiting
@@ -55,6 +62,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Clear Error Messages**: HTTP 429 responses with retry-after headers
 
 ### Request Logging & Monitoring
+
 - **Comprehensive Logging**: Detailed request/response logging middleware
 - **Performance Metrics**: Request duration tracking
 - **Error Tracking**: Exception logging with full details
@@ -62,11 +70,13 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Configurable Levels**: Debug and info log levels
 
 ### Data Management
+
 - **Automated Database Restoration**: Weekly automatic restoration to ensure fresh demo data
 - **Scheduled Tasks**: APScheduler-based restoration with configurable timing
 - **Manual Restoration**: On-demand database reset capability
 
 ### Team Organization
+
 - **Team Relationships**: Players properly linked to teams with foreign key constraints
 - **Team Details**: Display team name and city with each player
 - **Cascade Operations**: Proper handling of team-player relationships
@@ -74,6 +84,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 ## 🛠️ Tech Stack
 
 ### Backend
+
 - **Python 3.12** - Modern Python version
 - **FastAPI** - High-performance async web framework for building APIs
 - **SQLAlchemy** - SQL toolkit and Object-Relational Mapping (ORM)
@@ -85,6 +96,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **pytest** - Comprehensive testing framework (115 tests, 100% passing, 95%+ coverage)
 
 ### Frontend
+
 - **React 19** - Latest version with modern features
 - **TypeScript** - Full type safety across the application
 - **Axios** - Promise-based HTTP client for API calls
@@ -92,6 +104,7 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Jest & React Testing Library** - Comprehensive testing (359 tests, 100% passing, 87.84% coverage)
 
 ### Infrastructure
+
 - **Redis 7+** - Caching and rate limiting backend
 - **Docker** - Containerization support
 - **GitHub Actions** - CI/CD pipeline with automated testing
@@ -137,6 +150,7 @@ A full-stack web application for managing hockey players and teams, built to sho
    ```
 
    Example `.env` file:
+
    ```env
    # Database Configuration
    DATABASE_URL=postgresql://user:password@localhost:5432/hockey_db
@@ -248,7 +262,8 @@ Run the comprehensive test suite with 115 tests achieving 95%+ coverage:
 
 ```bash
 cd backend
-source venv/bin/activate
+source venv/bin/activate  # macOS/Linux
+# source venv\Scripts\activate   # Windows
 python -m pytest tests/ -v
 
 # Run with coverage report
@@ -258,6 +273,7 @@ python -m pytest tests/ --cov=app --cov-report=html --cov-report=term-missing -v
 **Coverage Target**: 85%+ (enforced by CI/CD pipeline)
 
 Test coverage includes:
+
 - API endpoint integration tests (25+ tests)
 - CRUD operations (create, read, update, delete)
 - Search functionality with string matching modes
@@ -286,6 +302,7 @@ npm run test:coverage
 **Coverage Target**: 85%+ (enforced by CI/CD pipeline)
 
 Test coverage includes:
+
 - Component rendering and behavior (14 test suites)
 - User interactions and events
 - Search and filter functionality
@@ -296,11 +313,12 @@ Test coverage includes:
 - Performance monitoring hooks
 - Edge cases and error conditions
 
-See [frontend/src/__tests__/TEST_README.md](frontend/src/__tests__/TEST_README.md) for detailed testing documentation.
+See [frontend/src/**tests**/TEST_README.md](frontend/src/__tests__/TEST_README.md) for detailed testing documentation.
 
 ### CI/CD Pipeline
 
 GitHub Actions automatically runs tests on every push and pull request:
+
 - ✅ Backend tests with PostgreSQL and Redis services
 - ✅ Frontend tests with Node.js 20
 - ✅ Code coverage validation (85% threshold)
@@ -334,18 +352,21 @@ GitHub Actions automatically runs tests on every push and pull request:
 - `active_status` - Whether player is currently active
 
 #### Regular Season Statistics
+
 - `regular_season_games_played` - Regular season games played
 - `regular_season_goals` - Regular season goals scored
 - `regular_season_assists` - Regular season assists
 - `regular_season_points` - Auto-calculated regular season points
 
 #### Playoff Statistics
+
 - `playoff_games_played` - Playoff games played
 - `playoff_goals` - Playoff goals scored
 - `playoff_assists` - Playoff assists
 - `playoff_points` - Auto-calculated playoff points
 
 #### Combined Statistics
+
 - `games_played` - Total games played (regular + playoff)
 - `goals` - Total goals (regular + playoff)
 - `assists` - Total assists (regular + playoff)
@@ -394,6 +415,7 @@ Visit `http://127.0.0.1:8000/docs` when the backend is running to see the automa
 ## 🎨 UI Components
 
 ### Modals
+
 - **Player Details Modal**: View complete player information with Edit/Delete actions
 - **Player Form Modal**: Reusable form for adding and editing players with validation
 - **Delete Confirmation Modal**: Safety confirmation before player deletion
@@ -401,6 +423,7 @@ Visit `http://127.0.0.1:8000/docs` when the backend is running to see the automa
 - **Column Toggle Modal**: Show/hide columns dynamically
 
 ### Components
+
 - **PlayersTable**: Main data grid with sorting, pagination, and column management
 - **PlayerSearch**: Search bar with field selection, match mode, and filter access
 - **Toast Notifications**: Non-intrusive success/error messages
@@ -419,12 +442,14 @@ The backend is designed for easy deployment to:
 - **Railway**: With built-in PostgreSQL and Redis
 
 **Required Environment Variables**:
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `REDIS_URL` - Redis connection string (optional)
 - `REDIS_ENABLED` - Enable/disable Redis (true/false)
 - `RATE_LIMIT_ENABLED` - Enable/disable rate limiting (true/false)
 
 See [RESTORATION_GUIDE.md](backend/RESTORATION_GUIDE.md) for detailed deployment instructions including:
+
 - systemd service configuration
 - Docker deployment
 - Heroku scheduler setup
@@ -526,6 +551,7 @@ hockey-player-crud-demo/
 ## 🔒 Data Validation
 
 ### Backend Validation (Pydantic)
+
 - Position must be one of: C, LW, RW, D, G
 - Handedness must be L or R
 - Jersey number must be 0-99
@@ -534,6 +560,7 @@ hockey-player-crud-demo/
 - Integer range validation
 
 ### Frontend Validation
+
 - All required fields must be filled
 - Jersey number range check (0-99)
 - Weight must be positive

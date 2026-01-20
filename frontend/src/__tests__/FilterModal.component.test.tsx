@@ -41,6 +41,7 @@ describe("FilterModal Component", () => {
         return;
       }
       // Let other errors through for debugging
+      // eslint-disable-next-line no-console
       console.warn(message);
     });
   });

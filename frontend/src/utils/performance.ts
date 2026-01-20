@@ -7,6 +7,7 @@
  * Enable by setting REACT_APP_ENABLE_PERF_LOGS=true in .env.local
  */
 
+/* eslint-disable no-console */
 // Check if performance logging is enabled
 const PERF_ENABLED =
   process.env.REACT_APP_ENABLE_PERF_LOGS === "true" ||

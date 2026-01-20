@@ -134,9 +134,8 @@ const PlayersTable: React.FC = () => {
         setTotalPages(response.data.total_pages);
         PerformanceMonitor.checkpoint(timerName, "data_processed");
       } catch (err) {
-        console.error("Error fetching players:", err);
         PerformanceMonitor.log(
-          `❌ ${timerName} - FETCH ERROR: ${(err as any).message || err}`
+          `❌ ${timerName} - FETCH ERROR: ${(err as Error).message || err}`
         );
         setError("Failed to fetch players. Please try again later.");
         setPlayers([]);
@@ -200,8 +199,7 @@ const PlayersTable: React.FC = () => {
         setTotalCount(playersResponse.data.total);
         setTotalPages(playersResponse.data.total_pages);
         setLoading(false);
-      } catch (error) {
-        console.error("Error initializing data:", error);
+      } catch {
         // Set fallback columns
         setVisibleColumns([
           "name",
@@ -219,6 +217,7 @@ const PlayersTable: React.FC = () => {
     };
 
     initializeData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [apiBaseUrl]); // Only run once on mount
 
   const handleSearch = useCallback(
@@ -495,10 +494,10 @@ const PlayersTable: React.FC = () => {
         currentFilters,
         true
       );
-    } catch (error: any) {
-      console.error("Error deleting player:", error);
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { detail?: string } } };
       const errorMessage =
-        error.response?.data?.detail || "Failed to delete player";
+        axiosError.response?.data?.detail || "Failed to delete player";
       showToast(errorMessage, "error");
     } finally {
       setIsDeleting(false);

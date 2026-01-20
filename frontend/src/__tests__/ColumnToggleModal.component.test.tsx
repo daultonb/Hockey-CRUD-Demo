@@ -152,11 +152,11 @@ describe("ColumnToggleModal Component", () => {
 
       await waitFor(() => {
         expect(screen.getByText("Name")).toBeInTheDocument();
-        expect(screen.getByText("Number")).toBeInTheDocument();
-        expect(screen.getByText("Position")).toBeInTheDocument();
-        expect(screen.getByText("Team")).toBeInTheDocument();
-        expect(screen.getByText("Goals")).toBeInTheDocument();
       });
+      expect(screen.getByText("Number")).toBeInTheDocument();
+      expect(screen.getByText("Position")).toBeInTheDocument();
+      expect(screen.getByText("Team")).toBeInTheDocument();
+      expect(screen.getByText("Goals")).toBeInTheDocument();
     });
 
     it("should show selected columns as checked", async () => {
@@ -170,20 +170,24 @@ describe("ColumnToggleModal Component", () => {
       );
 
       await waitFor(() => {
-        const nameCheckbox = screen.getByRole("checkbox", {
-          name: /Name/i,
-        }) as HTMLInputElement;
-        const numberCheckbox = screen.getByRole("checkbox", {
-          name: /Number/i,
-        }) as HTMLInputElement;
-        const goalsCheckbox = screen.getByRole("checkbox", {
-          name: /Goals/i,
-        }) as HTMLInputElement;
-
-        expect(nameCheckbox.checked).toBe(true);
-        expect(numberCheckbox.checked).toBe(true);
-        expect(goalsCheckbox.checked).toBe(true);
+        expect(
+          screen.getByRole("checkbox", { name: /Name/i })
+        ).toBeInTheDocument();
       });
+
+      const nameCheckbox = screen.getByRole("checkbox", {
+        name: /Name/i,
+      }) as HTMLInputElement;
+      const numberCheckbox = screen.getByRole("checkbox", {
+        name: /Number/i,
+      }) as HTMLInputElement;
+      const goalsCheckbox = screen.getByRole("checkbox", {
+        name: /Goals/i,
+      }) as HTMLInputElement;
+
+      expect(nameCheckbox.checked).toBe(true);
+      expect(numberCheckbox.checked).toBe(true);
+      expect(goalsCheckbox.checked).toBe(true);
     });
 
     it("should show unselected columns as unchecked", async () => {
@@ -197,16 +201,20 @@ describe("ColumnToggleModal Component", () => {
       );
 
       await waitFor(() => {
-        const positionCheckbox = screen.getByRole("checkbox", {
-          name: /Position/i,
-        }) as HTMLInputElement;
-        const teamCheckbox = screen.getByRole("checkbox", {
-          name: /Team/i,
-        }) as HTMLInputElement;
-
-        expect(positionCheckbox.checked).toBe(false);
-        expect(teamCheckbox.checked).toBe(false);
+        expect(
+          screen.getByRole("checkbox", { name: /Position/i })
+        ).toBeInTheDocument();
       });
+
+      const positionCheckbox = screen.getByRole("checkbox", {
+        name: /Position/i,
+      }) as HTMLInputElement;
+      const teamCheckbox = screen.getByRole("checkbox", {
+        name: /Team/i,
+      }) as HTMLInputElement;
+
+      expect(positionCheckbox.checked).toBe(false);
+      expect(teamCheckbox.checked).toBe(false);
     });
 
     it("should disable required columns", async () => {
@@ -388,20 +396,24 @@ describe("ColumnToggleModal Component", () => {
 
       // Should show default columns as checked
       await waitFor(() => {
-        const nameCheckbox = screen.getByRole("checkbox", {
-          name: /Name/i,
-        }) as HTMLInputElement;
-        const jerseyCheckbox = screen.getByRole("checkbox", {
-          name: /Number/i,
-        }) as HTMLInputElement;
-        const positionCheckbox = screen.getByRole("checkbox", {
-          name: /Position/i,
-        }) as HTMLInputElement;
-
-        expect(nameCheckbox.checked).toBe(true);
-        expect(jerseyCheckbox.checked).toBe(true);
-        expect(positionCheckbox.checked).toBe(true);
+        expect(
+          screen.getByRole("checkbox", { name: /Name/i })
+        ).toBeInTheDocument();
       });
+
+      const nameCheckbox = screen.getByRole("checkbox", {
+        name: /Name/i,
+      }) as HTMLInputElement;
+      const jerseyCheckbox = screen.getByRole("checkbox", {
+        name: /Number/i,
+      }) as HTMLInputElement;
+      const positionCheckbox = screen.getByRole("checkbox", {
+        name: /Position/i,
+      }) as HTMLInputElement;
+
+      expect(nameCheckbox.checked).toBe(true);
+      expect(jerseyCheckbox.checked).toBe(true);
+      expect(positionCheckbox.checked).toBe(true);
     });
   });
 });
