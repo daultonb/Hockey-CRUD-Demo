@@ -262,6 +262,8 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
     async (e: React.FormEvent) => {
       e.preventDefault();
 
+      // validateForm is intentionally not in dependencies to avoid unnecessary re-renders
+
       if (!validateForm()) {
         showToast("Please fix the form errors", "error");
         return;

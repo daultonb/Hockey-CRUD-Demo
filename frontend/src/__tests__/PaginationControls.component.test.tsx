@@ -304,7 +304,7 @@ describe("PaginationControls Component", () => {
   });
 
   describe("Page Numbers - Many Pages (Near Beginning)", () => {
-    it("should show first pages and ellipsis when current page is near beginning", () => {
+    it("should show first 3 pages, ellipsis, and last 3 pages", () => {
       render(
         <PaginationControls
           currentPage={2}
@@ -316,24 +316,28 @@ describe("PaginationControls Component", () => {
         />
       );
 
-      // Should show page 1 and last page
-      expect(screen.getByLabelText(/Go to page 1/i)).toBeInTheDocument();
-      expect(screen.getByLabelText(/Go to page 20/i)).toBeInTheDocument();
+      // Should show pages 1, 2, 3
+      expect(screen.getByLabelText("Go to page 1")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 2")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 3")).toBeInTheDocument();
 
       // Should show ellipsis
       expect(screen.getByText("...")).toBeInTheDocument();
 
+      // Should show last 3 pages (18, 19, 20)
+      expect(screen.getByLabelText("Go to page 18")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 19")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 20")).toBeInTheDocument();
+
       // Current page (2) should be marked as active
-      const currentPageButtons = screen.getAllByLabelText(/Go to page 2/i);
-      const activeButton = currentPageButtons.find(
-        (btn) => btn.getAttribute("aria-current") === "page"
-      );
-      expect(activeButton).toBeInTheDocument();
+      const currentPageButton = screen.getByLabelText("Go to page 2");
+      expect(currentPageButton).toHaveClass("active");
+      expect(currentPageButton).toHaveAttribute("aria-current", "page");
     });
   });
 
   describe("Page Numbers - Many Pages (Near End)", () => {
-    it("should show last pages and ellipsis when current page is near end", () => {
+    it("should show first 3 pages, ellipsis, and last 3 pages when current page is near end", () => {
       render(
         <PaginationControls
           currentPage={18}
@@ -345,20 +349,28 @@ describe("PaginationControls Component", () => {
         />
       );
 
-      // Should show ellipsis when many pages
+      // Should show pages 1, 2, 3
+      expect(screen.getByLabelText("Go to page 1")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 2")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 3")).toBeInTheDocument();
+
+      // Should show ellipsis
       expect(screen.getByText("...")).toBeInTheDocument();
 
+      // Should show last 3 pages (18, 19, 20)
+      expect(screen.getByLabelText("Go to page 18")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 19")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 20")).toBeInTheDocument();
+
       // Current page (18) should be marked as active
-      const currentPageButtons = screen.getAllByLabelText(/Go to page 18/i);
-      const activeButton = currentPageButtons.find(
-        (btn) => btn.getAttribute("aria-current") === "page"
-      );
-      expect(activeButton).toBeInTheDocument();
+      const currentPageButton = screen.getByLabelText("Go to page 18");
+      expect(currentPageButton).toHaveClass("active");
+      expect(currentPageButton).toHaveAttribute("aria-current", "page");
     });
   });
 
   describe("Page Numbers - Many Pages (In Middle)", () => {
-    it("should show middle pages with ellipsis on both sides when current page is in middle", () => {
+    it("should show first 3 pages, current page, and last 3 pages when current page is in middle", () => {
       render(
         <PaginationControls
           currentPage={10}
@@ -370,16 +382,58 @@ describe("PaginationControls Component", () => {
         />
       );
 
-      // Should show two ellipsis (one before and one after) when in middle
-      const ellipses = screen.getAllByText("...");
-      expect(ellipses.length).toBeGreaterThanOrEqual(1); // At least one ellipsis
+      // Should show pages 1, 2, 3
+      expect(screen.getByLabelText("Go to page 1")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 2")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 3")).toBeInTheDocument();
 
-      // Current page (10) should be marked as active
-      const currentPageButtons = screen.getAllByLabelText(/Go to page 10/i);
-      const activeButton = currentPageButtons.find(
-        (btn) => btn.getAttribute("aria-current") === "page"
+      // Should show two ellipses (before and after current page)
+      const ellipses = screen.getAllByText("...");
+      expect(ellipses).toHaveLength(2);
+
+      // Should show current page (10)
+      const currentPageButton = screen.getByLabelText("Go to page 10");
+      expect(currentPageButton).toBeInTheDocument();
+      expect(currentPageButton).toHaveClass("active");
+      expect(currentPageButton).toHaveAttribute("aria-current", "page");
+
+      // Should show last 3 pages (18, 19, 20)
+      expect(screen.getByLabelText("Go to page 18")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 19")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 20")).toBeInTheDocument();
+    });
+
+    it("should show page 4 when current page is 4", () => {
+      render(
+        <PaginationControls
+          currentPage={4}
+          totalPages={20}
+          itemsPerPage={20}
+          totalItems={400}
+          onPageChange={mockOnPageChange}
+          onItemsPerPageChange={mockOnItemsPerPageChange}
+        />
       );
-      expect(activeButton).toBeInTheDocument();
+
+      // Should show pages 1, 2, 3
+      expect(screen.getByLabelText("Go to page 1")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 2")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 3")).toBeInTheDocument();
+
+      // Should show two ellipses
+      const ellipses = screen.getAllByText("...");
+      expect(ellipses).toHaveLength(2);
+
+      // Should show current page (4)
+      const currentPageButton = screen.getByLabelText("Go to page 4");
+      expect(currentPageButton).toBeInTheDocument();
+      expect(currentPageButton).toHaveClass("active");
+      expect(currentPageButton).toHaveAttribute("aria-current", "page");
+
+      // Should show last 3 pages (18, 19, 20)
+      expect(screen.getByLabelText("Go to page 18")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 19")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 20")).toBeInTheDocument();
     });
   });
 
@@ -463,6 +517,16 @@ describe("PaginationControls Component", () => {
 
       // Should show ellipsis since totalPages > 7
       expect(screen.getByText("...")).toBeInTheDocument();
+
+      // Should show pages 1, 2, 3
+      expect(screen.getByLabelText("Go to page 1")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 2")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 3")).toBeInTheDocument();
+
+      // Should show last 3 pages (6, 7, 8)
+      expect(screen.getByLabelText("Go to page 6")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 7")).toBeInTheDocument();
+      expect(screen.getByLabelText("Go to page 8")).toBeInTheDocument();
     });
 
     it("should handle page 1 of 2 correctly", () => {

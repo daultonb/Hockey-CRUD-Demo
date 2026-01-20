@@ -51,44 +51,28 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
         pages.push(i);
       }
     } else {
-      // Always show first page
-      pages.push(1);
+      // Always show pages 1, 2, 3
+      pages.push(1, 2, 3);
 
-      let startPage: number;
-      let endPage: number;
+      // Check if current page is in the middle (not in first 3 or last 3)
+      const isCurrentInMiddle = currentPage > 3 && currentPage < totalPages - 2;
 
-      if (currentPage <= 4) {
-        // Near the beginning
-        startPage = 2;
-        endPage = 5;
-        pages.push(2, 3, 4, 5);
-        if (totalPages > 5) {
-          pages.push("...");
-        }
-      } else if (currentPage >= totalPages - 3) {
-        // Near the end
-        if (totalPages > 5) {
-          pages.push("...");
-        }
-        startPage = totalPages - 3;
-        endPage = totalPages - 1;
-        for (let i = startPage; i <= endPage; i++) {
-          pages.push(i);
-        }
-      } else {
-        // In the middle
+      if (isCurrentInMiddle) {
+        // Show first ellipsis, current page, second ellipsis
         pages.push("...");
-        startPage = currentPage - 1;
-        endPage = currentPage + 1;
-        for (let i = startPage; i <= endPage; i++) {
-          pages.push(i);
-        }
+        pages.push(currentPage);
+        pages.push("...");
+      } else if (totalPages > 6) {
+        // Just show one ellipsis between first 3 and last 3
         pages.push("...");
       }
 
-      // Always show last page
-      if (totalPages > 1) {
-        pages.push(totalPages);
+      // Show last 3 pages
+      for (let i = totalPages - 2; i <= totalPages; i++) {
+        // Only add if not already in the first 3 pages
+        if (i > 3) {
+          pages.push(i);
+        }
       }
     }
 

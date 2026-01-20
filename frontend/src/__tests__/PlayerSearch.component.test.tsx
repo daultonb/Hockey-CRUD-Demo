@@ -34,10 +34,12 @@ jest.mock("../types/Player", () => ({
 describe("PlayerSearch Component", () => {
   const mockOnSearch = jest.fn();
   const mockOnClear = jest.fn();
+  const mockOnHelpClick = jest.fn();
 
   const defaultProps = {
     onSearch: mockOnSearch,
     onClear: mockOnClear,
+    onHelpClick: mockOnHelpClick,
   };
 
   beforeEach(() => {
@@ -99,6 +101,15 @@ describe("PlayerSearch Component", () => {
       expect(
         screen.getByRole("option", { name: "Position" })
       ).toBeInTheDocument();
+    });
+
+    /*
+     * Tests that the help button is rendered in the search bar
+     */
+    test("renders help button", () => {
+      render(<PlayerSearch {...defaultProps} />);
+
+      expect(screen.getByTestId("help-button")).toBeInTheDocument();
     });
   });
 
@@ -348,6 +359,21 @@ describe("PlayerSearch Component", () => {
 
       expect(mockOnClear).toHaveBeenCalled();
       expect(mockOnSearch).not.toHaveBeenCalled();
+    });
+  });
+
+  // @component
+  describe("Help Button Functionality", () => {
+    /*
+     * Tests that clicking the help button calls the onHelpClick callback
+     */
+    test("calls onHelpClick when help button is clicked", async () => {
+      render(<PlayerSearch {...defaultProps} />);
+
+      const helpButton = screen.getByTestId("help-button");
+      await userEvent.click(helpButton);
+
+      expect(mockOnHelpClick).toHaveBeenCalledTimes(1);
     });
   });
 

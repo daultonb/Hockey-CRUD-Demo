@@ -125,5 +125,18 @@ body {
 
 .App {
   min-height: 100vh;
-  padding: 20px;
+}
+
+.app-content {
+  padding-top: 70px; /* Account for fixed navbar height */
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+}
+
+/* Adjust for smaller screens */
+@media (max-width: 767.98px) {
+  .app-content {
+    padding-top: 60px;
+  }
 }

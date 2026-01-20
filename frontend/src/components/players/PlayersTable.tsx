@@ -24,7 +24,6 @@ import {
   useInteractionTracking,
 } from "../../hooks/usePerformance";
 import { PerformanceMonitor } from "../../utils/performance";
-import HelpButton from "../help/HelpButton";
 import HelpPanel from "../help/HelpPanel";
 
 const PlayersTable: React.FC = () => {
@@ -663,11 +662,11 @@ const PlayersTable: React.FC = () => {
         onSearch={handleSearch}
         onClear={() => handleSearch("", "all")}
         disabled={searchLoading}
+        onHelpClick={() => setIsHelpOpen(true)}
       />
 
       <div className="table-top-bar">
         <div className="top-bar-left">
-          <HelpButton onClick={() => setIsHelpOpen(true)} />
           <button
             type="button"
             className="add-player-button"

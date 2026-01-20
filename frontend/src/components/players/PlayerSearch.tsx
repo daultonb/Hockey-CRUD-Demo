@@ -1,17 +1,20 @@
 import React, { useCallback, useState } from "react";
 import { SEARCHABLE_FIELDS, SearchField } from "../../types/Player";
+import HelpButton from "../help/HelpButton";
 import "./PlayerSearch.css";
 
 interface PlayerSearchProps {
   onSearch: (query: string, field: SearchField) => void;
   onClear: () => void;
   disabled?: boolean;
+  onHelpClick: () => void;
 }
 
 const PlayerSearch: React.FC<PlayerSearchProps> = ({
   onSearch,
   onClear,
   disabled = false,
+  onHelpClick,
 }) => {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchField, setSearchField] = useState<SearchField>("all");
@@ -88,74 +91,77 @@ const PlayerSearch: React.FC<PlayerSearchProps> = ({
 
   return (
     <div className="player-search">
-      <form onSubmit={handleSearchSubmit} className="search-form">
-        <div className="search-input-group">
-          <select
-            value={searchField}
-            onChange={(e) => handleFieldChange(e.target.value as SearchField)}
-            className="search-field-selector"
-            disabled={disabled}
-            aria-label="Select search field"
-          >
-            {SEARCHABLE_FIELDS.map((field) => (
-              <option key={field.value} value={field.value}>
-                {field.label}
-              </option>
-            ))}
-          </select>
-
-          <div className="search-input-wrapper">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => handleSearchChange(e.target.value)}
-              onKeyPress={handleKeyPress}
-              placeholder={`Search ${
-                searchField === "all"
-                  ? "all fields"
-                  : SEARCHABLE_FIELDS.find(
-                      (f) => f.value === searchField
-                    )?.label.toLowerCase()
-              }...`}
-              className="search-input"
+      <div className="search-container">
+        <HelpButton onClick={onHelpClick} />
+        <form onSubmit={handleSearchSubmit} className="search-form">
+          <div className="search-input-group">
+            <select
+              value={searchField}
+              onChange={(e) => handleFieldChange(e.target.value as SearchField)}
+              className="search-field-selector"
               disabled={disabled}
-              aria-label="Search players"
-            />
-
-            {searchQuery && (
-              <button
-                type="button"
-                onClick={handleClearClick}
-                className="clear-button"
-                aria-label="Clear search"
-                disabled={disabled}
-              >
-                ×
-              </button>
-            )}
-          </div>
-
-          <button
-            type="submit"
-            className="search-button"
-            disabled={disabled}
-            aria-label="Search"
-          >
-            <svg
-              className="search-icon"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-              aria-hidden="true"
+              aria-label="Select search field"
             >
-              <path
-                fillRule="evenodd"
-                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                clipRule="evenodd"
+              {SEARCHABLE_FIELDS.map((field) => (
+                <option key={field.value} value={field.value}>
+                  {field.label}
+                </option>
+              ))}
+            </select>
+
+            <div className="search-input-wrapper">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => handleSearchChange(e.target.value)}
+                onKeyPress={handleKeyPress}
+                placeholder={`Search ${
+                  searchField === "all"
+                    ? "all fields"
+                    : SEARCHABLE_FIELDS.find(
+                        (f) => f.value === searchField
+                      )?.label.toLowerCase()
+                }...`}
+                className="search-input"
+                disabled={disabled}
+                aria-label="Search players"
               />
-            </svg>
-          </button>
-        </div>
-      </form>
+
+              {searchQuery && (
+                <button
+                  type="button"
+                  onClick={handleClearClick}
+                  className="clear-button"
+                  aria-label="Clear search"
+                  disabled={disabled}
+                >
+                  ×
+                </button>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="search-button"
+              disabled={disabled}
+              aria-label="Search"
+            >
+              <svg
+                className="search-icon"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+                aria-hidden="true"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };
