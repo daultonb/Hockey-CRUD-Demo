@@ -109,168 +109,9 @@ A full-stack web application for managing hockey players and teams, built to sho
 - **Docker** - Containerization support
 - **GitHub Actions** - CI/CD pipeline with automated testing
 
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Python 3.12+
-- Node.js 20+
-- npm or yarn
-- PostgreSQL 13+ (for production)
-- Redis 7+ (optional, for caching and rate limiting)
-
-### Backend Setup
-
-1. **Navigate to backend directory:**
-
-   ```bash
-   cd backend
-   ```
-
-2. **Create virtual environment:**
-
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # macOS/Linux
-   # venv\Scripts\activate   # Windows
-   ```
-
-3. **Install dependencies:**
-
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment variables:**
-
-   ```bash
-   # Copy the example file and modify as needed
-   cp .env.example .env
-   # Edit .env file with your database URL and settings
-   ```
-
-   Example `.env` file:
-
-   ```env
-   # Database Configuration
-   DATABASE_URL=postgresql://user:password@localhost:5432/hockey_db
-   # Or for development with SQLite:
-   # DATABASE_URL=sqlite:///./hockey_players.db
-
-   # Redis Configuration (optional)
-   # Set REDIS_ENABLED=false to disable Redis entirely (no connection attempts)
-   # Set REDIS_ENABLED=true to use Redis if available (graceful degradation if unavailable)
-   REDIS_ENABLED=true
-   REDIS_URL=redis://localhost:6379
-   REDIS_CACHE_TTL=300  # Cache TTL in seconds (5 minutes)
-
-   # Rate Limiting Configuration
-   RATE_LIMIT_ENABLED=true
-   RATE_LIMIT_REQUESTS=100  # Max requests per window
-   RATE_LIMIT_WINDOW=60     # Window size in seconds
-
-   # Logging Configuration
-   LOG_LEVEL=INFO  # DEBUG, INFO, WARNING, ERROR, CRITICAL
-
-   # Restoration schedule (optional)
-   RESTORE_DAY=0  # 0=Monday, 6=Sunday
-   RESTORE_HOUR=2
-   RESTORE_MINUTE=0
-   ```
-
-5. **Start Redis (optional but recommended):**
-
-   ```bash
-   # macOS with Homebrew
-   brew services start redis
-
-   # Linux
-   sudo systemctl start redis
-
-   # Windows with Memurai
-   # Download from https://www.memurai.com/
-
-   # Or with Docker
-   docker run -d -p 6379:6379 redis:7-alpine
-   ```
-
-6. **Initialize the database:**
-
-   ```bash
-   # For PostgreSQL, first create the database
-   python init_db.py
-
-   # Populate with sample data
-   python populate_db.py
-   ```
-
-7. **Start the server:**
-
-   ```bash
-   # Development (with auto-reload)
-   uvicorn app.main:app --reload
-
-   # Or use the configured server runner
-   python run_server.py
-   ```
-
-   Backend will be available at `http://127.0.0.1:8000`
-
-8. **(Optional) Enable automated restoration:**
-
-   ```bash
-   # Run the scheduled restoration service
-   python scheduled_restore.py
-   ```
-
-   See [RESTORATION_GUIDE.md](backend/RESTORATION_GUIDE.md) for deployment options.
-
-### Frontend Setup
-
-1. **Navigate to frontend directory:**
-
-   ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies:**
-
-   ```bash
-   npm install
-   ```
-
-3. **Set up environment variables:**
-
-   ```bash
-   # Create .env file with your API endpoint
-   echo "REACT_APP_API_BASE_URL=http://127.0.0.1:8000" > .env
-   ```
-
-4. **Start the development server:**
-
-   ```bash
-   npm start
-   ```
-
-   Frontend will be available at `http://localhost:3000`
-
 ## 🧪 Testing
 
 ### Backend Tests
-
-Run the comprehensive test suite with 115 tests achieving 95%+ coverage:
-
-```bash
-cd backend
-source venv/bin/activate  # macOS/Linux
-# source venv\Scripts\activate   # Windows
-python -m pytest tests/ -v
-
-# Run with coverage report
-python -m pytest tests/ --cov=app --cov-report=html --cov-report=term-missing -v
-```
-
-**Coverage Target**: 85%+ (enforced by CI/CD pipeline)
 
 Test coverage includes:
 
@@ -288,18 +129,6 @@ Test coverage includes:
 See [backend/tests/TEST_README.md](backend/tests/TEST_README.md) for detailed testing documentation.
 
 ### Frontend Tests
-
-Run the comprehensive test suite with 359 tests achieving 87.84% coverage:
-
-```bash
-cd frontend
-npm test
-
-# Run with coverage report
-npm run test:coverage
-```
-
-**Coverage Target**: 85%+ (enforced by CI/CD pipeline)
 
 Test coverage includes:
 
@@ -408,10 +237,6 @@ GitHub Actions automatically runs tests on every push and pull request:
 - **Rate Limiting**: 100 requests per minute per IP
 - **Request Logging**: Full request/response logging with performance metrics
 
-### Interactive Documentation
-
-Visit `http://127.0.0.1:8000/docs` when the backend is running to see the automatically generated API documentation with interactive testing capabilities.
-
 ## 🎨 UI Components
 
 ### Modals
@@ -434,49 +259,18 @@ Visit `http://127.0.0.1:8000/docs` when the backend is running to see the automa
 
 ### Backend Deployment
 
-The backend is designed for easy deployment to:
-
-- **Heroku**: With PostgreSQL and Redis add-ons
-- **AWS**: Elastic Beanstalk or Lambda with RDS PostgreSQL and ElastiCache Redis
-- **DigitalOcean**: App Platform with managed PostgreSQL and Redis
-- **Railway**: With built-in PostgreSQL and Redis
-
-**Required Environment Variables**:
-
-- `DATABASE_URL` - PostgreSQL connection string
-- `REDIS_URL` - Redis connection string (optional)
-- `REDIS_ENABLED` - Enable/disable Redis (true/false)
-- `RATE_LIMIT_ENABLED` - Enable/disable rate limiting (true/false)
-
-See [RESTORATION_GUIDE.md](backend/RESTORATION_GUIDE.md) for detailed deployment instructions including:
-
-- systemd service configuration
-- Docker deployment
-- Heroku scheduler setup
-- AWS EventBridge configuration
+The backend is deeployed to **Railway** with built-in PostgreSQL and Redis
 
 ### Frontend Deployment
 
-The frontend can be deployed to:
-
-- **Vercel**: Zero-config deployment with GitHub integration
-- **Netlify**: Continuous deployment with environment variables
-- **AWS S3 + CloudFront**: Static hosting with CDN
-- **GitHub Pages**: Free static hosting
-
-Update the `REACT_APP_API_BASE_URL` environment variable to point to your production backend.
+The frontend is deployed to **Vercel** with zero-config deployment with GitHub integration
 
 ### Database
 
-For production, use PostgreSQL:
-
-Implementation TBD.
 
 ### Caching
 
-For production Redis:
-
-Implemenation TBD.
+Caching uses **Redis**.
 
 ## 📝 Project Structure
 
@@ -590,7 +384,7 @@ This project is open source and available under the [MIT License](LICENSE).
 
 **Daulton B**
 
-- Portfolio: [Coming Soon]
+- Portfolio: [https://www.daultonb.com]
 - LinkedIn: [https://www.linkedin.com/in/daultonbaird/]
 - GitHub: [@daultonb]
 
