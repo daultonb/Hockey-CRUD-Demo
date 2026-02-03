@@ -21,10 +21,25 @@ jobs:
           echo "🌐 Pinging frontend at hockey.daultonb.com..."
           curl -f -s -o /dev/null -w "Frontend Status: %{http_code}\n" https://hockey.daultonb.com || echo "Frontend request failed"
 
-      - name: Keep Backend Alive - Health Check
+      - name: Keep Backend Alive - Root Check
         run: |
-          echo "🔧 Pinging backend health endpoint..."
-          curl -f -s https://hockey-player-crud-demo-production.up.railway.app/ || echo "Backend health check failed"
+          echo "🔧 Pinging backend root endpoint..."
+          curl -f -s https://hockey-player-crud-demo-production.up.railway.app/ || echo "Backend root check failed"
+
+      - name: Keep Redis Cache Active - Health Check
+        run: |
+          echo "🔴 Pinging health endpoint to keep Upstash Redis active..."
+          response=$(curl -s https://hockey-player-crud-demo-production.up.railway.app/health)
+          echo "Health response: $response"
+
+          redis_status=$(echo "$response" | jq -r '.redis')
+          echo "Redis status: $redis_status"
+
+          if [ "$redis_status" = "connected" ]; then
+            echo "✅ Upstash Redis is connected and active"
+          else
+            echo "⚠️ Redis status: $redis_status (may need attention)"
+          fi
 
       - name: Keep Database Active - Fetch Teams
         run: |
@@ -73,6 +88,7 @@ jobs:
           echo "════════════════════════════════════════"
           echo "✅ Frontend pinged"
           echo "✅ Backend health checked"
+          echo "✅ Upstash Redis cache pinged"
           echo "✅ Database queries executed"
           echo "✅ Neon PostgreSQL kept active"
           echo "✅ Railway backend kept active"
