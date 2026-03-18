@@ -332,20 +332,26 @@ def client(test_engine):
     """
     Create FastAPI test client for endpoint testing.
     Overrides the database dependency to use the test database.
+    Includes the admin API key header for authenticated endpoints.
     """
-    TestingSessionLocal = sessionmaker(
+    from app.config import settings
+
+    testing_session_local = sessionmaker(
         autocommit=False, autoflush=False, bind=test_engine
     )
 
     def override_get_db():
-        db = TestingSessionLocal()
+        db = testing_session_local()
         try:
             yield db
         finally:
             db.close()
 
     app.dependency_overrides[get_db] = override_get_db
-    yield TestClient(app)
+    headers = {}
+    if settings.admin_api_key:
+        headers["X-API-Key"] = settings.admin_api_key
+    yield TestClient(app, headers=headers)
     app.dependency_overrides.clear()
 
 
@@ -354,18 +360,41 @@ def reset_redis_client():
     """
     Reset Redis client between tests to avoid event loop conflicts.
     This runs automatically before each test function.
+    Also clears cached player data to prevent stale cache hits from
+    previous test runs interfering with test assertions.
     """
-    # Reset the singleton instance before each test
+    import asyncio
+
     from app.redis_client import RedisClient
 
-    # Simply reset the class variables - don't try to close connections
-    # as that causes "Event loop is closed" errors
+    # Clear cached player data before the test to prevent stale cache hits
+    async def clear_player_cache():
+        try:
+            client = await RedisClient.get_client()
+            keys = await client.keys("cache:players*")
+            if keys:
+                await client.delete(*keys)
+        except Exception:
+            pass  # If Redis is not available, skip cleanup
+
+    try:
+        loop = asyncio.get_event_loop()
+        if loop.is_running():
+            pass  # Can't clear synchronously from a running loop
+        else:
+            loop.run_until_complete(clear_player_cache())
+    except Exception:
+        pass
+
+    # Reset the singleton instance before each test
     RedisClient._client = None
     RedisClient._pool = None
+    RedisClient._is_available = None
     yield
     # Clean up after test
     RedisClient._client = None
     RedisClient._pool = None
+    RedisClient._is_available = None
 
 
 @pytest.fixture(scope="function", autouse=False)  # Disabled for now - causing test issues

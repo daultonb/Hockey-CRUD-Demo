@@ -11,22 +11,22 @@ SearchFieldType = Literal[
 # Sort field options - matches database fields and team join
 SortFieldType = Literal[
     "name",
-    "position", 
+    "position",
     "team",
     "jersey_number",
     "active_status",
     "regular_season_games_played",
     "regular_season_goals",
     "regular_season_assists",
-    "regular_season_points", 
+    "regular_season_points",
     "playoff_games_played",
     "playoff_goals",
     "playoff_assists",
     "playoff_points",
     "games_played",
-    "goals", 
-    "assists", 
-    "points", 
+    "goals",
+    "assists",
+    "points",
 ]
 
 # Sort direction options
@@ -34,22 +34,22 @@ SortDirectionType = Literal["asc", "desc"]
 
 # Filter field options - fields that can be filtered
 FilterFieldType = Literal[
-    "position", 
-    "team", 
-    "jersey_number", 
+    "position",
+    "team",
+    "jersey_number",
     "active_status",
     "regular_season_games_played",
     "regular_season_goals",
-    "regular_season_assists", 
+    "regular_season_assists",
     "regular_season_points",
     "playoff_games_played",
     "playoff_goals",
     "playoff_assists",
-    "playoff_points", 
+    "playoff_points",
     "games_played",
-    "goals", 
-    "assists", 
-    "points", 
+    "goals",
+    "assists",
+    "points",
 ]
 
 # Filter operators for different data types
@@ -90,15 +90,15 @@ class PlayerFilter(BaseModel):
             "jersey_number",
             "regular_season_games_played",
             "regular_season_goals",
-            "regular_season_assists", 
+            "regular_season_assists",
             "regular_season_points",
             "playoff_games_played",
             "playoff_goals",
             "playoff_assists",
             "playoff_points",
             "games_played",
-            "goals", 
-            "assists", 
+            "goals",
+            "assists",
             "points",
         ]:
             if operator not in ["=", "!=", ">", "<", ">=", "<="]:
@@ -157,13 +157,13 @@ class PlayerResponse(BaseModel):
     weight: int
     handedness: str
     active_status: bool
-    
+
     # Regular season statistics
     regular_season_goals: int
     regular_season_assists: int
     regular_season_points: int
     regular_season_games_played: int
-    
+
     # Playoff statistics
     playoff_goals: int
     playoff_assists: int
@@ -175,7 +175,7 @@ class PlayerResponse(BaseModel):
     goals: int
     assists: int
     points: int
-    
+
     team: TeamResponse
 
 

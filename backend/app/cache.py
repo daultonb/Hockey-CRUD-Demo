@@ -15,7 +15,7 @@ Industry Best Practices:
 """
 
 import json
-from typing import Any, Optional
+from typing import Any
 
 from app.config import settings
 from app.redis_client import RedisClient, RedisUnavailableError
@@ -42,7 +42,7 @@ class CacheService:
         return f"cache:{namespace}:{identifier}"
 
     @staticmethod
-    async def get(namespace: str, identifier: str) -> Optional[Any]:
+    async def get(namespace: str, identifier: str) -> Any | None:
         """
         Get a value from cache.
 
@@ -81,7 +81,7 @@ class CacheService:
         namespace: str,
         identifier: str,
         value: Any,
-        ttl: Optional[int] = None
+        ttl: int | None = None
     ) -> bool:
         """
         Set a value in cache with optional TTL.

@@ -30,7 +30,7 @@ class TestRateLimiting:
         # Make more than 300 requests
         responses = []
 
-        for i in range(310):
+        for _ in range(310):
             response = client.get("/teams")
             responses.append(response.status_code)
 
@@ -55,10 +55,10 @@ class TestRateLimiting:
 
         # POST endpoint has 50/minute limit
         # Make more than 50 requests
-        for i in range(55):
+        for idx in range(55):
             response = client.post("/players", json={
-                "name": f"Test Player {i}",
-                "jersey_number": (i % 99) + 1,
+                "name": f"Test Player {idx}",
+                "jersey_number": (idx % 99) + 1,
                 "position": "C",
                 "team_id": sample_teams[0].id,
                 "nationality": "Canadian",
@@ -98,7 +98,7 @@ class TestRateLimiting:
         """
         # Make enough requests to hit rate limit
         response = None
-        for i in range(310):
+        for _ in range(310):
             response = client.get("/teams")
             if response.status_code == 429:
                 break
@@ -121,7 +121,7 @@ class TestRateLimiting:
         Expected: Other endpoints still work
         """
         # Hit rate limit on teams endpoint (300/minute)
-        for i in range(310):
+        for _ in range(310):
             response = client.get("/teams")
             if response.status_code == 429:
                 break
@@ -161,7 +161,7 @@ class TestRateLimitConfiguration:
         from app.rate_limit import limiter
 
         assert limiter is not None, "Limiter should be configured"
-        assert limiter.enabled == True, "Limiter should be enabled in tests"
+        assert limiter.enabled, "Limiter should be enabled in tests"
 
     def test_app_has_rate_limiter(self):
         """
@@ -190,7 +190,7 @@ class TestRateLimitEdgeCases:
         responses = []
 
         # Make invalid POST requests (missing required fields)
-        for i in range(55):
+        for _ in range(55):
             response = client.post("/players", json={"name": "Invalid"})
             responses.append(response.status_code)
 
@@ -216,7 +216,7 @@ class TestRateLimitEdgeCases:
         pytest.skip("Skipping slow test - rate limit reset takes 60+ seconds")
 
         # Hit rate limit
-        for i in range(310):
+        for _ in range(310):
             response = client.get("/teams")
             if response.status_code == 429:
                 break
@@ -241,7 +241,7 @@ class TestRateLimitEdgeCases:
         responses = []
 
         # Make requests as fast as possible
-        for i in range(320):
+        for _ in range(320):
             response = client.get("/teams")
             responses.append(response.status_code)
 

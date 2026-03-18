@@ -6,8 +6,8 @@ Use this to measure and log timing information for API requests and database que
 """
 
 import time
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, Optional
 
 from app.config import settings
 
@@ -23,7 +23,7 @@ class PerformanceMonitor:
     enabled = settings.debug_mode
 
     @staticmethod
-    def log(message: str, duration_ms: Optional[float] = None):
+    def log(message: str, duration_ms: float | None = None):
         """
         Log a performance message with optional duration.
 
@@ -118,7 +118,7 @@ class RequestTimer:
 
     def __init__(self, operation_name: str):
         self.operation_name = operation_name
-        self.start_time: Optional[float] = None
+        self.start_time: float | None = None
         self.checkpoints: list[tuple[str, float]] = []
 
     def __enter__(self):

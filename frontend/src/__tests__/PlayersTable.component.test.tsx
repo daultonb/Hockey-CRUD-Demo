@@ -1,7 +1,7 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axios from "axios";
+import apiClient from "../api/client";
 import PlayersTable from "../components/players/PlayersTable";
 import { ToastProvider } from "../components/ToastContainer";
 
@@ -14,13 +14,20 @@ import {
 
 /* eslint-disable no-console */
 
-// Mock axios with proper Jest pattern
-jest.mock("axios", () => ({
-  get: jest.fn(),
+// Mock the API client module directly
+jest.mock("../api/client", () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+  getWriteHeaders: jest.fn(() => ({})),
 }));
 
-// Create typed reference to mocked axios
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+// Create typed reference to mocked apiClient
+const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 // Mock child components for isolation testing
 jest.mock("../components/players/PlayerSearch", () => {
@@ -165,6 +172,27 @@ jest.mock("../components/modals/FilterModal", () => {
           Apply Filters
         </button>
         <div data-testid="current-filters-count">{currentFilters.length}</div>
+      </div>
+    );
+  };
+});
+
+jest.mock("../components/modals/ColumnToggleModal", () => {
+  return function MockColumnToggleModal({
+    isOpen,
+    onClose,
+  }: {
+    isOpen: boolean;
+    onClose: () => void;
+    initialVisibleColumns: string[];
+    onColumnsChange: (columns: string[]) => void;
+  }) {
+    if (!isOpen) return null;
+    return (
+      <div data-testid="mock-column-toggle-modal">
+        <button data-testid="close-column-modal-button" onClick={onClose}>
+          Close
+        </button>
       </div>
     );
   };
@@ -402,7 +430,7 @@ describe("PlayersTable Component", () => {
 
       // Check footer info
       expect(screen.getByText(/Showing 2 of 2 players/)).toBeInTheDocument();
-      expect(screen.getByText(/Sorted by.*name/i)).toBeInTheDocument();
+      expect(screen.getByText(/Sorted by.*points/i)).toBeInTheDocument();
     });
 
     /*
@@ -457,7 +485,7 @@ describe("PlayersTable Component", () => {
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          "http://localhost:8000/players?page=1&limit=10&sort_by=name&sort_order=asc"
+          "/players?page=1&limit=10&sort_by=points&sort_order=desc"
         );
       });
     });
@@ -475,7 +503,7 @@ describe("PlayersTable Component", () => {
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          "http://127.0.0.1:8000/players?page=1&limit=10&sort_by=name&sort_order=asc"
+          "/players?page=1&limit=10&sort_by=points&sort_order=desc"
         );
       });
     });
@@ -558,7 +586,7 @@ describe("PlayersTable Component", () => {
 
       // Should maintain default sort parameters
       const clearCall = mockedAxios.get.mock.calls[0][0];
-      expect(clearCall).toContain("sort_by=name&sort_order=asc");
+      expect(clearCall).toContain("sort_by=points&sort_order=desc");
       expect(clearCall).not.toMatch(/search=/);
     });
   });
@@ -610,22 +638,22 @@ describe("PlayersTable Component", () => {
       mockedAxios.get.mockResolvedValueOnce({ data: mockApiResponse });
       mockedAxios.get.mockResolvedValueOnce({ data: mockApiResponse });
 
-      // Click name header (already sorted by name asc) to toggle to desc
+      // Click name header (not currently sorted by name) to sort name asc
       const nameHeader = screen.getByText(/^Name/);
       await userEvent.click(nameHeader);
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          expect.stringContaining("sort_by=name&sort_order=desc")
+          expect.stringContaining("sort_by=name&sort_order=asc")
         );
       });
 
-      // Click again to toggle back to asc
+      // Click again to toggle to desc
       await userEvent.click(nameHeader);
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          expect.stringContaining("sort_by=name&sort_order=asc")
+          expect.stringContaining("sort_by=name&sort_order=desc")
         );
       });
     });
@@ -641,11 +669,11 @@ describe("PlayersTable Component", () => {
       renderPlayersTable();
 
       await waitFor(() => {
-        expect(screen.getByText("Name ↑")).toBeInTheDocument();
+        expect(screen.getByText("Points ↓")).toBeInTheDocument();
       });
 
-      // Name should show ascending arrow initially
-      expect(screen.getByText("Name ↑")).toBeInTheDocument();
+      // Points should show descending arrow initially (default sort)
+      expect(screen.getByText("Points ↓")).toBeInTheDocument();
     });
 
     /*
@@ -881,7 +909,7 @@ describe("PlayersTable Component", () => {
       expect(screen.getByText(/Showing 2 of 100 players/)).toBeInTheDocument();
 
       // Check sort info
-      expect(screen.getByText(/Sorted by.*name/i)).toBeInTheDocument();
+      expect(screen.getByText(/Sorted by.*points/i)).toBeInTheDocument();
     });
 
     /*
@@ -1043,10 +1071,7 @@ describe("PlayersTable Component", () => {
 
       // Check sort tooltips (component shows detailed tooltip text)
       const nameHeader = screen.getByRole("columnheader", { name: /name/i });
-      expect(nameHeader).toHaveAttribute(
-        "title",
-        "Currently sorted by name asc, click for descending"
-      );
+      expect(nameHeader).toHaveAttribute("title", "Click to sort by name");
     });
 
     /*
@@ -1276,11 +1301,13 @@ describe("PlayersTable Component", () => {
         expect(screen.getByText("Test Player")).toBeInTheDocument();
       });
 
-      // Check tooltip for currently sorted field (name, ascending)
-      const nameHeader = screen.getByRole("columnheader", { name: /name/i });
-      expect(nameHeader).toHaveAttribute(
+      // Check tooltip for currently sorted field (points, descending)
+      const pointsHeader = screen.getByRole("columnheader", {
+        name: /^Points/i,
+      });
+      expect(pointsHeader).toHaveAttribute(
         "title",
-        "Currently sorted by name asc, click for descending"
+        "Currently sorted by points desc, click for ascending"
       );
 
       // Check tooltip for non-sorted field
@@ -1304,19 +1331,19 @@ describe("PlayersTable Component", () => {
       renderPlayersTable();
 
       await waitFor(() => {
-        expect(screen.getByText("Name ↑")).toBeInTheDocument();
+        expect(screen.getByText("Points ↓")).toBeInTheDocument();
       });
 
       // Setup sort response
       mockedAxios.get.mockResolvedValueOnce({ data: mockColumnMetadata });
       mockedAxios.get.mockResolvedValueOnce({ data: mockApiResponse });
 
-      // Click to sort descending
-      const nameHeader = screen.getByText("Name ↑");
+      // Click name header (not currently sorted) to sort name asc
+      const nameHeader = screen.getByText(/^Name$/);
       await userEvent.click(nameHeader);
 
       await waitFor(() => {
-        expect(screen.getByText("Name ↓")).toBeInTheDocument();
+        expect(screen.getByText("Name ↑")).toBeInTheDocument();
       });
 
       // Non-sorted fields should not show arrows
@@ -1407,7 +1434,7 @@ describe("PlayersTable Component", () => {
 
       await waitFor(() => {
         expect(mockedAxios.get).toHaveBeenCalledWith(
-          expect.stringContaining("http://127.0.0.1:8000")
+          expect.stringContaining("/players")
         );
       });
 

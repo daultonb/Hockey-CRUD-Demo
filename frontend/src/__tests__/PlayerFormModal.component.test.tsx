@@ -1,20 +1,25 @@
 import "@testing-library/jest-dom";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import axios from "axios";
+import apiClient from "../api/client";
 import React from "react";
 import PlayerFormModal from "../components/modals/PlayerFormModal";
 import { ToastProvider } from "../components/ToastContainer";
 
-// Mock axios with proper Jest pattern
-jest.mock("axios", () => ({
-  get: jest.fn(),
-  post: jest.fn(),
-  put: jest.fn(),
+// Mock the API client module directly
+jest.mock("../api/client", () => ({
+  __esModule: true,
+  default: {
+    get: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    delete: jest.fn(),
+  },
+  getWriteHeaders: jest.fn(() => ({})),
 }));
 
-// Create typed reference to mocked axios
-const mockedAxios = axios as jest.Mocked<typeof axios>;
+// Create typed reference to mocked apiClient
+const mockedAxios = apiClient as jest.Mocked<typeof apiClient>;
 
 const mockTeams = [
   { id: 1, name: "Team A", abbreviation: "TMA" },
@@ -362,6 +367,7 @@ describe("PlayerFormModal", () => {
       await waitFor(() => {
         expect(mockedAxios.post).toHaveBeenCalledWith(
           expect.stringContaining("/players"),
+          expect.any(Object),
           expect.any(Object)
         );
       });
@@ -388,6 +394,7 @@ describe("PlayerFormModal", () => {
       await waitFor(() => {
         expect(mockedAxios.put).toHaveBeenCalledWith(
           expect.stringContaining("/players/1"),
+          expect.any(Object),
           expect.any(Object)
         );
       });

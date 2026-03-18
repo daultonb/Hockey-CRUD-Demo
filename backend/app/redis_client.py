@@ -6,7 +6,6 @@ for efficient Redis operations. Uses the async Redis client for compatibility
 with FastAPI's async architecture.
 """
 
-from typing import Optional
 
 import redis.asyncio as redis
 from redis.asyncio.connection import ConnectionPool
@@ -35,9 +34,9 @@ class RedisClient:
         value = await redis_client.get("key")
     """
 
-    _pool: Optional[ConnectionPool] = None
-    _client: Optional[redis.Redis] = None
-    _is_available: Optional[bool] = None
+    _pool: ConnectionPool | None = None
+    _client: redis.Redis | None = None
+    _is_available: bool | None = None
 
     @classmethod
     async def check_availability(cls) -> bool:

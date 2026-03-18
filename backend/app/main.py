@@ -11,13 +11,8 @@ from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from app.auth import require_api_key
-
 from app.cache import CacheService
 from app.config import settings
-from app.middleware import PerformanceMiddleware
-from app.performance import PerformanceMonitor, RequestTimer
-from app.rate_limit import limiter
-from app.redis_client import RedisClient
 from app.crud.player import (
     create_player,
     delete_player,
@@ -26,8 +21,12 @@ from app.crud.player import (
     update_player,
 )
 from app.database import Base, engine, get_db
+from app.middleware import PerformanceMiddleware
 from app.models.player import Player
 from app.models.team import Team
+from app.performance import RequestTimer
+from app.rate_limit import limiter
+from app.redis_client import RedisClient
 from app.schemas.player import (
     FilterFieldType,
     PlayerCreate,
@@ -127,13 +126,13 @@ def format_player_response(player: Player) -> dict:
         "weight": player.weight,
         "handedness": player.handedness,
         "active_status": player.active_status,
-        
+
         # Regular season statistics
         "regular_season_goals": player.regular_season_goals,
         "regular_season_assists": player.regular_season_assists,
         "regular_season_points": player.regular_season_points,
         "regular_season_games_played": player.regular_season_games_played,
-        
+
         # Playoff statistics
         "playoff_goals": player.playoff_goals,
         "playoff_assists": player.playoff_assists,
@@ -144,7 +143,7 @@ def format_player_response(player: Player) -> dict:
         "goals": player.goals,
         "assists": player.assists,
         "points": player.points,
-        
+
         "team": {
             "id": player.team.id,
             "name": player.team.name,
@@ -158,14 +157,18 @@ async def root():
     """
     Root endpoint to verify the API is running.
     """
-    return {"message": "Hockey Player CRUD API", "status": "ok"}
+    return {
+        "message": f"Welcome to {settings.app_name}",
+        "version": settings.app_version,
+        "status": "running",
+    }
 
 
 @app.get("/health")
 async def health_check(db: Session = Depends(get_db)):
     """
     Health check endpoint for monitoring.
-    Returns minimal status to avoid leaking internal service topology.
+    Returns service status including database and Redis availability.
     """
     try:
         db.execute(text("SELECT 1"))
@@ -173,7 +176,20 @@ async def health_check(db: Session = Depends(get_db)):
     except Exception:
         db_status = "unavailable"
 
-    return {"status": "ok" if db_status == "ok" else "degraded"}
+    redis_status = "disconnected"
+    try:
+        is_available = await RedisClient.ping()
+        redis_status = "connected" if is_available else "disconnected"
+    except Exception:
+        redis_status = "disconnected"
+
+    overall_status = "healthy" if db_status == "ok" else "degraded"
+
+    return {
+        "status": overall_status,
+        "service": settings.app_name,
+        "redis": redis_status,
+    }
 
 
 @app.get("/players", response_model=PlayerSearchResponse)
@@ -244,7 +260,7 @@ async def get_players(
         cached_response = await CacheService.get("players", cache_key)
         if cached_response:
             timer.checkpoint("cache_hit")
-            print(f"API: Returning cached response for players")
+            print("API: Returning cached response for players")
             return cached_response
 
         timer.checkpoint("cache_miss")
@@ -291,13 +307,13 @@ def _field_name_to_label(field_name: str) -> str:
     # Special cases for better labeling
     special_cases = {
         "jersey_number": "Number",
-        "active_status": "Status", 
+        "active_status": "Status",
         "birth_date": "Birth Date"
     }
-    
+
     if field_name in special_cases:
         return special_cases[field_name]
-    
+
     # Convert snake_case to Title Case
     return re.sub(r'_', ' ', field_name).title()
 
@@ -313,7 +329,7 @@ async def get_column_metadata():
     searchable_fields = set(get_args(SearchFieldType)) - {"all"}  # Remove "all" as it's not a real field
     sortable_fields = set(get_args(SortFieldType))
     filterable_fields = set(get_args(FilterFieldType))
-    
+
     # Define the desired display order for unselected columns (for easy discovery)
     desired_order = [
         'jersey_number',
@@ -352,27 +368,27 @@ async def get_column_metadata():
         'points',
         'active_status',
     ]
-    
+
     # Get all fields from PlayerResponse model, excluding nested objects and metadata
     player_fields = PlayerResponse.model_fields
     excluded_fields = {"id", "team"}  # Exclude ID (not user-manageable) and team (nested object)
-    
+
     # Build column metadata dynamically from PlayerResponse schema
     columns_metadata = []
-    
+
     for field_name, field_info in player_fields.items():
         if field_name in excluded_fields:
             continue
-            
+
         # Determine capabilities based on schema type definitions
         capabilities = []
         if field_name in searchable_fields:
             capabilities.append("searchable")
         if field_name in sortable_fields:
-            capabilities.append("sortable") 
+            capabilities.append("sortable")
         if field_name in filterable_fields:
             capabilities.append("filterable")
-            
+
         columns_metadata.append({
             "key": field_name,
             "label": _field_name_to_label(field_name),
@@ -380,7 +396,7 @@ async def get_column_metadata():
             "capabilities": capabilities,
             "field_type": str(field_info.annotation).replace("typing.", "").replace("<class '", "").replace("'>", "")
         })
-    
+
     # Sort columns by the desired order
     def get_order_index(column):
         try:
@@ -388,7 +404,7 @@ async def get_column_metadata():
         except ValueError:
             # If not in desired_order, put at the end
             return len(desired_order)
-    
+
     columns_metadata.sort(key=get_order_index)
 
     return {
@@ -408,7 +424,7 @@ async def get_teams(request: Request, db: Session = Depends(get_db)):
     # Try to get from cache first
     cached_teams = await CacheService.get("teams", "all")
     if cached_teams:
-        print(f"API: Returning cached teams")
+        print("API: Returning cached teams")
         return cached_teams
 
     # Cache miss - fetch from database

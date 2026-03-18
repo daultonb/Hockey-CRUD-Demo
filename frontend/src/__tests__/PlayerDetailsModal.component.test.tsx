@@ -180,7 +180,7 @@ describe("PlayerDetailsModal Component", () => {
       expect(screen.getByText("Center")).toBeInTheDocument();
 
       expect(screen.getByText("Team:")).toBeInTheDocument();
-      expect(screen.getByText("Edmonton Oilers")).toBeInTheDocument();
+      expect(screen.getByText("Oilers")).toBeInTheDocument();
 
       expect(screen.getByText("Nationality:")).toBeInTheDocument();
       expect(screen.getByText("Canadian")).toBeInTheDocument();
@@ -598,7 +598,7 @@ describe("PlayerDetailsModal Component", () => {
         />
       );
 
-      expect(screen.getByText("Montréal Canadiens")).toBeInTheDocument();
+      expect(screen.getByText("Canadiens")).toBeInTheDocument();
       expect(screen.getByText("Côte d'Ivoire")).toBeInTheDocument();
     });
 
