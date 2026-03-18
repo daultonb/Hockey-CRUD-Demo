@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient, { getWriteHeaders } from "../../api/client";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   ACTIVE_STATUS_OPTIONS,
@@ -70,9 +70,6 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
   player,
 }) => {
   const { showToast } = useToast();
-  const apiBaseUrl =
-    process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
-
   const [teams, setTeams] = useState<Team[]>([]);
   const [showPlayoffFields, setShowPlayoffFields] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -100,7 +97,7 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
   useEffect(() => {
     const fetchTeams = async () => {
       try {
-        const response = await axios.get<Team[]>(`${apiBaseUrl}/teams`);
+        const response = await apiClient.get<Team[]>("/teams");
         setTeams(response.data);
       } catch {
         showToast("Failed to load teams", "error");
@@ -110,7 +107,7 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
     if (isOpen) {
       fetchTeams();
     }
-  }, [isOpen, apiBaseUrl, showToast]);
+  }, [isOpen, showToast]);
 
   useEffect(() => {
     if (isOpen && mode === "edit" && player) {
@@ -304,10 +301,10 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
         };
 
         if (mode === "add") {
-          await axios.post(`${apiBaseUrl}/players`, payload);
+          await apiClient.post("/players", payload, { headers: getWriteHeaders() });
           showToast("Player added successfully", "success");
         } else if (mode === "edit" && player) {
-          await axios.put(`${apiBaseUrl}/players/${player.id}`, payload);
+          await apiClient.put(`/players/${player.id}`, payload, { headers: getWriteHeaders() });
           showToast("Player updated successfully", "success");
         }
 
@@ -331,7 +328,6 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
       showPlayoffFields,
       mode,
       player,
-      apiBaseUrl,
       showToast,
       onSuccess,
       onClose,

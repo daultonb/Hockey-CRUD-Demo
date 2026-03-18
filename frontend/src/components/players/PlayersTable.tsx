@@ -1,4 +1,4 @@
-import axios from "axios";
+import apiClient, { getWriteHeaders } from "../../api/client";
 import React, { useCallback, useEffect, useState } from "react";
 import { JSX } from "react/jsx-runtime";
 import {
@@ -78,9 +78,6 @@ const PlayersTable: React.FC = () => {
   // Help panel state
   const [isHelpOpen, setIsHelpOpen] = useState<boolean>(false);
 
-  const apiBaseUrl =
-    process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:8000";
-
   const fetchPlayers = useCallback(
     async (
       search?: string,
@@ -123,8 +120,8 @@ const PlayersTable: React.FC = () => {
           params.append("filters", JSON.stringify(filters));
         }
 
-        const response = await axios.get<PlayersApiResponse>(
-          `${apiBaseUrl}/players?${params}`
+        const response = await apiClient.get<PlayersApiResponse>(
+          `/players?${params}`
         );
         PerformanceMonitor.checkpoint(timerName, "response_received");
 
@@ -152,7 +149,6 @@ const PlayersTable: React.FC = () => {
       itemsPerPage,
       currentSortField,
       currentSortDirection,
-      apiBaseUrl,
     ]
   );
 
@@ -162,7 +158,7 @@ const PlayersTable: React.FC = () => {
       try {
         // Fetch both column metadata and players in parallel
         const [columnsResponse, playersResponse] = await Promise.all([
-          axios.get(`${apiBaseUrl}/column-metadata`),
+          apiClient.get("/column-metadata"),
           (async () => {
             const params = new URLSearchParams({
               page: String(currentPage),
@@ -170,8 +166,8 @@ const PlayersTable: React.FC = () => {
               sort_by: currentSortField,
               sort_order: currentSortDirection,
             });
-            return axios.get<PlayersApiResponse>(
-              `${apiBaseUrl}/players?${params}`
+            return apiClient.get<PlayersApiResponse>(
+              `/players?${params}`
             );
           })(),
         ]);
@@ -217,7 +213,7 @@ const PlayersTable: React.FC = () => {
 
     initializeData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [apiBaseUrl]); // Only run once on mount
+  }, []); // Only run once on mount
 
   const handleSearch = useCallback(
     (search: string, field: SearchField) => {
@@ -474,7 +470,7 @@ const PlayersTable: React.FC = () => {
 
     setIsDeleting(true);
     try {
-      await axios.delete(`${apiBaseUrl}/players/${deletingPlayer.id}`);
+      await apiClient.delete(`/players/${deletingPlayer.id}`, { headers: getWriteHeaders() });
       showToast(
         `Player ${deletingPlayer.name} deleted successfully`,
         "success"
@@ -503,7 +499,6 @@ const PlayersTable: React.FC = () => {
     }
   }, [
     deletingPlayer,
-    apiBaseUrl,
     showToast,
     fetchPlayers,
     currentSearch,

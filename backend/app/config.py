@@ -46,6 +46,8 @@ class Settings:
         os.getenv("ELASTICSEARCH_ENABLED", "true").lower() == "true"
     )
 
+    admin_api_key: str = os.getenv("ADMIN_API_KEY", "")
+
     def get_allowed_origins_list(self) -> list[str]:
         """Parse allowed origins from comma-separated string to list."""
         if self.allowed_origins:

@@ -7,7 +7,10 @@ from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from sqlalchemy import text
 from sqlalchemy.orm import Session
+
+from app.auth import require_api_key
 
 from app.cache import CacheService
 from app.config import settings
@@ -46,6 +49,9 @@ app = FastAPI(
     version=settings.app_version,
     description="A CRUD API for managing hockey players and teams",
     debug=settings.debug_mode,
+    docs_url="/docs" if settings.debug_mode else None,
+    redoc_url="/redoc" if settings.debug_mode else None,
+    openapi_url="/openapi.json" if settings.debug_mode else None,
 )
 
 # Configure rate limiting
@@ -61,8 +67,19 @@ app.add_middleware(
     allow_origins=settings.allowed_origins,
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE"],
-    allow_headers=["*"],
+    allow_headers=["Content-Type", "Authorization", "X-API-Key"],
 )
+
+
+@app.middleware("http")
+async def add_security_headers(request: Request, call_next):
+    response = await call_next(request)
+    response.headers["X-Content-Type-Options"] = "nosniff"
+    response.headers["X-Frame-Options"] = "DENY"
+    response.headers["Strict-Transport-Security"] = "max-age=63072000; includeSubDomains"
+    response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+    response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
+    return response
 
 
 @app.on_event("startup")
@@ -141,47 +158,22 @@ async def root():
     """
     Root endpoint to verify the API is running.
     """
-    return {
-        "message": f"Welcome to {settings.app_name}",
-        "version": settings.app_version,
-        "status": "running",
-    }
+    return {"message": "Hockey Player CRUD API", "status": "ok"}
 
 
 @app.get("/health")
-async def health_check():
+async def health_check(db: Session = Depends(get_db)):
     """
     Health check endpoint for monitoring.
-
-    Returns service status and connectivity to external dependencies:
-    - Database (PostgreSQL)
-    - Redis (caching and rate limiting)
-    - Elasticsearch (full-text search)
+    Returns minimal status to avoid leaking internal service topology.
     """
-    from app.redis_client import RedisClient
-
-    health = {
-        "status": "healthy",
-        "service": settings.app_name,
-        "version": settings.app_version,
-        "database": "connected",
-        "redis": "unknown",
-        "elasticsearch": "unknown",
-    }
-
-    # Check Redis connectivity
     try:
-        redis_connected = await RedisClient.ping()
-        health["redis"] = "connected" if redis_connected else "disconnected"
-    except Exception as e:
-        health["redis"] = f"error: {str(e)}"
-        health["status"] = "degraded"
+        db.execute(text("SELECT 1"))
+        db_status = "ok"
+    except Exception:
+        db_status = "unavailable"
 
-    # Elasticsearch check will be added later
-    if not settings.elasticsearch_enabled:
-        health["elasticsearch"] = "disabled"
-
-    return health
+    return {"status": "ok" if db_status == "ok" else "degraded"}
 
 
 @app.get("/players", response_model=PlayerSearchResponse)
@@ -443,7 +435,8 @@ async def get_teams(request: Request, db: Session = Depends(get_db)):
 async def create_new_player(
     request: Request,
     player_data: PlayerCreate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(require_api_key),
 ):
     """
     Create a new player.
@@ -516,7 +509,8 @@ async def update_existing_player(
     request: Request,
     player_id: int,
     player_data: PlayerUpdate,
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    _: None = Depends(require_api_key),
 ):
     """
     Update an existing player.
@@ -544,7 +538,12 @@ async def update_existing_player(
 
 @app.delete("/players/{player_id}", status_code=204)
 @limiter.limit("20/minute")
-async def delete_existing_player(request: Request, player_id: int, db: Session = Depends(get_db)):
+async def delete_existing_player(
+    request: Request,
+    player_id: int,
+    db: Session = Depends(get_db),
+    _: None = Depends(require_api_key),
+):
     """
     Delete a player from the database.
 

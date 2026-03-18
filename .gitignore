@@ -62,6 +62,7 @@ frontend/.env.production.local
 *.swo
 *~
 .claude/
+markdowns/
 
 # OS files
 .DS_Store
