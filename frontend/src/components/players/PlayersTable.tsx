@@ -48,10 +48,10 @@ const PlayersTable: React.FC = () => {
   const [totalCount, setTotalCount] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(0);
 
-  // Sort state - default to name ascending
-  const [currentSortField, setCurrentSortField] = useState<SortField>("name");
+  // Sort state - default to points descending
+  const [currentSortField, setCurrentSortField] = useState<SortField>("points");
   const [currentSortDirection, setCurrentSortDirection] =
-    useState<SortDirection>("asc");
+    useState<SortDirection>("desc");
 
   // Filter state
   const [currentFilters, setCurrentFilters] = useState<PlayerFilter[]>([]);
@@ -144,12 +144,7 @@ const PlayersTable: React.FC = () => {
         PerformanceMonitor.log(`✅ ${timerName} - FETCH COMPLETE`);
       }
     },
-    [
-      currentPage,
-      itemsPerPage,
-      currentSortField,
-      currentSortDirection,
-    ]
+    [currentPage, itemsPerPage, currentSortField, currentSortDirection]
   );
 
   // Fetch default visible columns AND initial players in parallel on mount
@@ -166,9 +161,7 @@ const PlayersTable: React.FC = () => {
               sort_by: currentSortField,
               sort_order: currentSortDirection,
             });
-            return apiClient.get<PlayersApiResponse>(
-              `/players?${params}`
-            );
+            return apiClient.get<PlayersApiResponse>(`/players?${params}`);
           })(),
         ]);
 
@@ -470,7 +463,9 @@ const PlayersTable: React.FC = () => {
 
     setIsDeleting(true);
     try {
-      await apiClient.delete(`/players/${deletingPlayer.id}`, { headers: getWriteHeaders() });
+      await apiClient.delete(`/players/${deletingPlayer.id}`, {
+        headers: getWriteHeaders(),
+      });
       showToast(
         `Player ${deletingPlayer.name} deleted successfully`,
         "success"

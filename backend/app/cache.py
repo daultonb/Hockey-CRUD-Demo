@@ -190,7 +190,7 @@ class CacheService:
         Called when player data is created, updated, or deleted.
         """
         # Invalidate all player listings (various query combinations)
-        await CacheService.delete_pattern("cache:players:list:*")
+        await CacheService.delete_pattern("cache:players:list*")
         # Invalidate all individual player caches
         await CacheService.delete_pattern("cache:players:detail:*")
         print("Cache: Invalidated all player caches")
@@ -206,7 +206,7 @@ class CacheService:
         # Invalidate the specific player detail
         await CacheService.delete("players:detail", str(player_id))
         # Also invalidate all player listings since they might include this player
-        await CacheService.delete_pattern("cache:players:list:*")
+        await CacheService.delete_pattern("cache:players:list*")
         print(f"Cache: Invalidated player {player_id}")
 
     @staticmethod

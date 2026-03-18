@@ -44,7 +44,7 @@ interface FormErrors {
   [key: string]: string;
 }
 
-// Map full position names from DB to abbreviations used in form
+// DB may store full names (from NHL data fetcher); map to abbreviations for the form/API
 const POSITION_NAME_TO_ABBREV: Record<string, string> = {
   Center: "C",
   "Left Wing": "LW",
@@ -53,13 +53,9 @@ const POSITION_NAME_TO_ABBREV: Record<string, string> = {
   Goalie: "G",
 };
 
-// Map abbreviations to full names for sending to API
-const POSITION_ABBREV_TO_NAME: Record<string, string> = {
-  C: "Center",
-  LW: "Left Wing",
-  RW: "Right Wing",
-  D: "Defense",
-  G: "Goalie",
+const HANDEDNESS_NAME_TO_ABBREV: Record<string, string> = {
+  Right: "R",
+  Left: "L",
 };
 
 const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
@@ -111,19 +107,17 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
 
   useEffect(() => {
     if (isOpen && mode === "edit" && player) {
-      // Convert full position name from DB to abbreviation for the form
-      const positionAbbrev =
-        POSITION_NAME_TO_ABBREV[player.position] || player.position;
       setFormData({
         name: player.name,
         jersey_number: String(player.jersey_number),
-        position: positionAbbrev,
+        position: POSITION_NAME_TO_ABBREV[player.position] ?? player.position,
         team_id: String(player.team.id),
         nationality: player.nationality,
         birth_date: player.birth_date,
         height: player.height,
         weight: String(player.weight),
-        handedness: player.handedness,
+        handedness:
+          HANDEDNESS_NAME_TO_ABBREV[player.handedness] ?? player.handedness,
         active_status: player.active_status,
         regular_season_games_played: String(player.regular_season_games_played),
         regular_season_goals: String(player.regular_season_goals),
@@ -269,14 +263,10 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
       setSubmitting(true);
 
       try {
-        // Convert position abbreviation back to full name for API
-        const positionFullName =
-          POSITION_ABBREV_TO_NAME[formData.position] || formData.position;
-
         const payload: PlayerCreate | PlayerUpdate = {
           name: formData.name.trim(),
           jersey_number: parseInt(formData.jersey_number),
-          position: positionFullName,
+          position: formData.position,
           team_id: parseInt(formData.team_id),
           nationality: formData.nationality.trim(),
           birth_date: formData.birth_date,
@@ -301,10 +291,14 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
         };
 
         if (mode === "add") {
-          await apiClient.post("/players", payload, { headers: getWriteHeaders() });
+          await apiClient.post("/players", payload, {
+            headers: getWriteHeaders(),
+          });
           showToast("Player added successfully", "success");
         } else if (mode === "edit" && player) {
-          await apiClient.put(`/players/${player.id}`, payload, { headers: getWriteHeaders() });
+          await apiClient.put(`/players/${player.id}`, payload, {
+            headers: getWriteHeaders(),
+          });
           showToast("Player updated successfully", "success");
         }
 
@@ -312,26 +306,19 @@ const PlayerFormModal: React.FC<PlayerFormModalProps> = ({
         onClose();
       } catch (error: unknown) {
         const axiosError = error as {
-          response?: { data?: { detail?: string } };
+          response?: { data?: { detail?: string | { msg: string }[] } };
         };
-        const errorMessage =
-          axiosError.response?.data?.detail ||
-          `Failed to ${mode === "add" ? "add" : "update"} player`;
+        const detail = axiosError.response?.data?.detail;
+        const errorMessage = Array.isArray(detail)
+          ? detail.map((e) => e.msg).join(", ")
+          : detail || `Failed to ${mode === "add" ? "add" : "update"} player`;
         showToast(errorMessage, "error");
       } finally {
         setSubmitting(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      formData,
-      showPlayoffFields,
-      mode,
-      player,
-      showToast,
-      onSuccess,
-      onClose,
-    ]
+    [formData, showPlayoffFields, mode, player, showToast, onSuccess, onClose]
   );
 
   const regularSeasonPoints =

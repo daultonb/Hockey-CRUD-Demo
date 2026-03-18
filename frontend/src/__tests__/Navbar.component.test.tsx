@@ -77,7 +77,7 @@ describe("Navbar Component", () => {
       const toggleButton = screen.getByRole("button", {
         name: /toggle navigation/i,
       });
-      const navCollapse = document.querySelector(".navbar-collapse");
+      const navCollapse = screen.getByTestId("navbar-collapse");
 
       expect(navCollapse).not.toHaveClass("show");
       expect(toggleButton).not.toHaveClass("active");
@@ -95,7 +95,7 @@ describe("Navbar Component", () => {
       const toggleButton = screen.getByRole("button", {
         name: /toggle navigation/i,
       });
-      const navCollapse = document.querySelector(".navbar-collapse");
+      const navCollapse = screen.getByTestId("navbar-collapse");
 
       // Open menu
       fireEvent.click(toggleButton);
@@ -115,7 +115,7 @@ describe("Navbar Component", () => {
         name: /toggle navigation/i,
       });
       const brandLink = screen.getByRole("link", { name: /db/i });
-      const navCollapse = document.querySelector(".navbar-collapse");
+      const navCollapse = screen.getByTestId("navbar-collapse");
 
       // Open menu first
       fireEvent.click(toggleButton);
@@ -133,7 +133,7 @@ describe("Navbar Component", () => {
         name: /toggle navigation/i,
       });
       const linkedInLink = screen.getByRole("link", { name: /linkedin/i });
-      const navCollapse = document.querySelector(".navbar-collapse");
+      const navCollapse = screen.getByTestId("navbar-collapse");
 
       // Open menu first
       fireEvent.click(toggleButton);
@@ -151,7 +151,7 @@ describe("Navbar Component", () => {
         name: /toggle navigation/i,
       });
       const githubLink = screen.getByRole("link", { name: /github/i });
-      const navCollapse = document.querySelector(".navbar-collapse");
+      const navCollapse = screen.getByTestId("navbar-collapse");
 
       // Open menu first
       fireEvent.click(toggleButton);
@@ -167,7 +167,7 @@ describe("Navbar Component", () => {
     it("should have navbar-dark class on nav element", () => {
       render(<Navbar />);
 
-      const nav = document.querySelector("nav");
+      const nav = screen.getByRole("navigation");
       expect(nav).toHaveClass("navbar");
       expect(nav).toHaveClass("navbar-dark");
     });
@@ -175,21 +175,21 @@ describe("Navbar Component", () => {
     it("should have container class on inner div", () => {
       render(<Navbar />);
 
-      const container = document.querySelector(".container");
+      const container = screen.getByTestId("navbar-container");
       expect(container).toBeInTheDocument();
     });
 
     it("should have ms-auto class on navbar-nav for right alignment", () => {
       render(<Navbar />);
 
-      const navList = document.querySelector(".navbar-nav");
+      const navList = screen.getByRole("list");
       expect(navList).toHaveClass("ms-auto");
     });
 
     it("should render three toggler icon spans", () => {
       render(<Navbar />);
 
-      const togglerIcons = document.querySelectorAll(".navbar-toggler-icon");
+      const togglerIcons = screen.getAllByTestId("navbar-toggler-icon");
       expect(togglerIcons).toHaveLength(3);
     });
   });

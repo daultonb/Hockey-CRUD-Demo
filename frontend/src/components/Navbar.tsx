@@ -14,7 +14,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className="navbar navbar-dark">
-      <div className="container">
+      <div className="container" data-testid="navbar-container">
         <a
           href="https://daultonb.com"
           className="navbar-brand"
@@ -31,12 +31,24 @@ const Navbar: React.FC = () => {
           aria-label="Toggle navigation"
           aria-expanded={isOpen}
         >
-          <span className="navbar-toggler-icon"></span>
-          <span className="navbar-toggler-icon"></span>
-          <span className="navbar-toggler-icon"></span>
+          <span
+            className="navbar-toggler-icon"
+            data-testid="navbar-toggler-icon"
+          ></span>
+          <span
+            className="navbar-toggler-icon"
+            data-testid="navbar-toggler-icon"
+          ></span>
+          <span
+            className="navbar-toggler-icon"
+            data-testid="navbar-toggler-icon"
+          ></span>
         </button>
 
-        <div className={`navbar-collapse ${isOpen ? "show" : ""}`}>
+        <div
+          className={`navbar-collapse ${isOpen ? "show" : ""}`}
+          data-testid="navbar-collapse"
+        >
           <ul className="navbar-nav ms-auto">
             <li className="nav-item">
               <a
