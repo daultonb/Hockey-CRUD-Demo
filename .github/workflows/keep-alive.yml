@@ -94,8 +94,14 @@ jobs:
 
           if [ "$http_code" = "404" ]; then
             echo "Auth layer is active (DELETE /players/999999 returned 404 as expected)"
-          elif [ "$http_code" = "401" ] || [ "$http_code" = "422" ]; then
-            echo "Auth check failed (status $http_code) - verify ADMIN_API_KEY secret matches production"
+          elif [ "$http_code" = "401" ]; then
+            echo "Auth check failed (401) - ADMIN_API_KEY secret does not match the key configured in Railway"
+            exit 1
+          elif [ "$http_code" = "422" ]; then
+            echo "Auth check failed (422) - X-API-Key header was not sent; verify ADMIN_API_KEY is set in GitHub secrets"
+            exit 1
+          elif [ "$http_code" = "500" ]; then
+            echo "Auth check failed (500) - ADMIN_API_KEY is not configured in the Railway production environment"
             exit 1
           else
             echo "Unexpected status $http_code from auth check"
