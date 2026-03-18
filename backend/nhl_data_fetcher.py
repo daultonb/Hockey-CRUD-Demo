@@ -111,7 +111,7 @@ class NHLDataFetcher:
             print(f"Fetching: {url}")
             response = requests.get(url, params=params, timeout=10)
             response.raise_for_status()
-            time.sleep(0.5)  # Be respectful to the API
+            time.sleep(0.5)
             return response.json()
         except requests.exceptions.RequestException as e:
             print(f"Error fetching {url}: {e}")
@@ -270,17 +270,17 @@ class NHLDataFetcher:
         return f"{first_name} {last_name}".strip()
     
     def map_position(self, position: str) -> str:
-        """Map API position codes to standard positions."""
+        """Map API position codes to standard position abbreviations."""
         position_map = {
-            "C": "Center",
-            "L": "Left Wing", 
-            "LW": "Left Wing",
-            "R": "Right Wing",
-            "RW": "Right Wing", 
-            "D": "Defense",
-            "G": "Goalie"
+            "C": "C",
+            "L": "LW",
+            "LW": "LW",
+            "R": "RW",
+            "RW": "RW",
+            "D": "D",
+            "G": "G",
         }
-        
+
         return position_map.get(position, position)
     
     def get_team_roster_and_stats(self) -> Dict[str, Any]:
@@ -351,7 +351,7 @@ class NHLDataFetcher:
                     "birth_date": self.format_birth_date(bio_data.get("birthDate", "")),
                     "height": self.format_height(bio_data.get("heightInInches", "")),
                     "weight": bio_data.get("weightInPounds", 180),
-                    "handedness": bio_data.get("shootsCatches", "Right"),
+                    "handedness": bio_data.get("shootsCatches", "R"),
                     "active_status": True,  # All roster players are active for the season
                     "team_id": team_id,  # Use correct team ID from mapping
                     "regular_season_stats": {

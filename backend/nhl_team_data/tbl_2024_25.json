@@ -1,0 +1,655 @@
+{
+  "team": {
+    "id": 26,
+    "name": "Tampa Bay Lightning",
+    "city": "Tampa",
+    "conference": "Eastern",
+    "division": "Atlantic",
+    "founded_year": 1992,
+    "arena": "Amalie Arena"
+  },
+  "players": [
+    {
+      "id": 8474715,
+      "name": "Cam Atkinson",
+      "position": "RW",
+      "nationality": "USA",
+      "jersey_number": 13,
+      "birth_date": "1989-06-05",
+      "height": "5'8\"",
+      "weight": 178,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 4,
+        "assists": 5,
+        "points": 9,
+        "games_played": 39
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 0
+      },
+      "games_played": 39,
+      "goals": 4,
+      "assists": 5,
+      "points": 9
+    },
+    {
+      "id": 8477416,
+      "name": "Oliver Bjorkstrand",
+      "position": "RW",
+      "nationality": "DNK",
+      "jersey_number": 22,
+      "birth_date": "1995-04-10",
+      "height": "6'0\"",
+      "weight": 175,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 21,
+        "assists": 25,
+        "points": 46,
+        "games_played": 79
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 0
+      },
+      "games_played": 79,
+      "goals": 21,
+      "assists": 25,
+      "points": 46
+    },
+    {
+      "id": 8482070,
+      "name": "Mitchell Chaffee",
+      "position": "RW",
+      "nationality": "USA",
+      "jersey_number": 41,
+      "birth_date": "1998-01-26",
+      "height": "6'1\"",
+      "weight": 197,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 12,
+        "assists": 6,
+        "points": 18,
+        "games_played": 66
+      },
+      "playoff_stats": {
+        "goals": 1,
+        "assists": 0,
+        "points": 1,
+        "games_played": 4
+      },
+      "games_played": 70,
+      "goals": 13,
+      "assists": 6,
+      "points": 19
+    },
+    {
+      "id": 8478519,
+      "name": "Anthony Cirelli",
+      "position": "C",
+      "nationality": "CAN",
+      "jersey_number": 71,
+      "birth_date": "1997-07-15",
+      "height": "6'1\"",
+      "weight": 193,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 27,
+        "assists": 32,
+        "points": 59,
+        "games_played": 80
+      },
+      "playoff_stats": {
+        "goals": 1,
+        "assists": 0,
+        "points": 1,
+        "games_played": 5
+      },
+      "games_played": 85,
+      "goals": 28,
+      "assists": 32,
+      "points": 60
+    },
+    {
+      "id": 8476878,
+      "name": "Zemgus Girgensons",
+      "position": "C",
+      "nationality": "LVA",
+      "jersey_number": 28,
+      "birth_date": "1994-01-05",
+      "height": "6'3\"",
+      "weight": 197,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 2,
+        "assists": 4,
+        "points": 6,
+        "games_played": 82
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 5
+      },
+      "games_played": 87,
+      "goals": 2,
+      "assists": 4,
+      "points": 6
+    },
+    {
+      "id": 8476822,
+      "name": "Luke Glendening",
+      "position": "C",
+      "nationality": "USA",
+      "jersey_number": 11,
+      "birth_date": "1989-04-28",
+      "height": "5'11\"",
+      "weight": 190,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 4,
+        "assists": 3,
+        "points": 7,
+        "games_played": 77
+      },
+      "playoff_stats": {
+        "goals": 1,
+        "assists": 1,
+        "points": 2,
+        "games_played": 5
+      },
+      "games_played": 82,
+      "goals": 5,
+      "assists": 4,
+      "points": 9
+    },
+    {
+      "id": 8482201,
+      "name": "Gage Goncalves",
+      "position": "C",
+      "nationality": "CAN",
+      "jersey_number": 93,
+      "birth_date": "2001-01-16",
+      "height": "6'1\"",
+      "weight": 189,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 8,
+        "assists": 12,
+        "points": 20,
+        "games_played": 60
+      },
+      "playoff_stats": {
+        "goals": 1,
+        "assists": 3,
+        "points": 4,
+        "games_played": 5
+      },
+      "games_played": 65,
+      "goals": 9,
+      "assists": 15,
+      "points": 24
+    },
+    {
+      "id": 8476826,
+      "name": "Yanni Gourde",
+      "position": "C",
+      "nationality": "CAN",
+      "jersey_number": 37,
+      "birth_date": "1991-12-15",
+      "height": "5'9\"",
+      "weight": 173,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 7,
+        "assists": 24,
+        "points": 31,
+        "games_played": 57
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 1,
+        "points": 1,
+        "games_played": 5
+      },
+      "games_played": 62,
+      "goals": 7,
+      "assists": 25,
+      "points": 32
+    },
+    {
+      "id": 8477404,
+      "name": "Jake Guentzel",
+      "position": "C",
+      "nationality": "USA",
+      "jersey_number": 59,
+      "birth_date": "1994-10-06",
+      "height": "5'11\"",
+      "weight": 176,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 41,
+        "assists": 39,
+        "points": 80,
+        "games_played": 80
+      },
+      "playoff_stats": {
+        "goals": 3,
+        "assists": 3,
+        "points": 6,
+        "games_played": 5
+      },
+      "games_played": 85,
+      "goals": 44,
+      "assists": 42,
+      "points": 86
+    },
+    {
+      "id": 8479542,
+      "name": "Brandon Hagel",
+      "position": "LW",
+      "nationality": "CAN",
+      "jersey_number": 38,
+      "birth_date": "1998-08-27",
+      "height": "6'2\"",
+      "weight": 186,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 35,
+        "assists": 55,
+        "points": 90,
+        "games_played": 82
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 3
+      },
+      "games_played": 85,
+      "goals": 35,
+      "assists": 55,
+      "points": 90
+    },
+    {
+      "id": 8476453,
+      "name": "Nikita Kucherov",
+      "position": "RW",
+      "nationality": "RUS",
+      "jersey_number": 86,
+      "birth_date": "1993-06-17",
+      "height": "6'0\"",
+      "weight": 173,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 37,
+        "assists": 84,
+        "points": 121,
+        "games_played": 78
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 4,
+        "points": 4,
+        "games_played": 5
+      },
+      "games_played": 83,
+      "goals": 37,
+      "assists": 88,
+      "points": 125
+    },
+    {
+      "id": 8477426,
+      "name": "Nick Paul",
+      "position": "LW",
+      "nationality": "CAN",
+      "jersey_number": 20,
+      "birth_date": "1995-03-20",
+      "height": "6'4\"",
+      "weight": 234,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 22,
+        "assists": 19,
+        "points": 41,
+        "games_played": 76
+      },
+      "playoff_stats": {
+        "goals": 2,
+        "assists": 0,
+        "points": 2,
+        "games_played": 5
+      },
+      "games_played": 81,
+      "goals": 24,
+      "assists": 19,
+      "points": 43
+    },
+    {
+      "id": 8478010,
+      "name": "Brayden Point",
+      "position": "C",
+      "nationality": "CAN",
+      "jersey_number": 21,
+      "birth_date": "1996-03-13",
+      "height": "5'11\"",
+      "weight": 177,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 42,
+        "assists": 40,
+        "points": 82,
+        "games_played": 77
+      },
+      "playoff_stats": {
+        "goals": 2,
+        "assists": 0,
+        "points": 2,
+        "games_played": 5
+      },
+      "games_played": 82,
+      "goals": 44,
+      "assists": 40,
+      "points": 84
+    },
+    {
+      "id": 8478416,
+      "name": "Erik Cernak",
+      "position": "D",
+      "nationality": "SVK",
+      "jersey_number": 81,
+      "birth_date": "1997-05-28",
+      "height": "6'4\"",
+      "weight": 230,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 3,
+        "assists": 18,
+        "points": 21,
+        "games_played": 76
+      },
+      "playoff_stats": {
+        "goals": 1,
+        "assists": 0,
+        "points": 1,
+        "games_played": 5
+      },
+      "games_played": 81,
+      "goals": 4,
+      "assists": 18,
+      "points": 22
+    },
+    {
+      "id": 8475167,
+      "name": "Victor Hedman",
+      "position": "D",
+      "nationality": "SWE",
+      "jersey_number": 77,
+      "birth_date": "1990-12-18",
+      "height": "6'7\"",
+      "weight": 244,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 15,
+        "assists": 51,
+        "points": 66,
+        "games_played": 79
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 3,
+        "points": 3,
+        "games_played": 5
+      },
+      "games_played": 84,
+      "goals": 15,
+      "assists": 54,
+      "points": 69
+    },
+    {
+      "id": 8482929,
+      "name": "Emil Lilleberg",
+      "position": "D",
+      "nationality": "NOR",
+      "jersey_number": 78,
+      "birth_date": "2001-02-02",
+      "height": "6'3\"",
+      "weight": 215,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 1,
+        "assists": 18,
+        "points": 19,
+        "games_played": 76
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 1,
+        "points": 1,
+        "games_played": 5
+      },
+      "games_played": 81,
+      "goals": 1,
+      "assists": 19,
+      "points": 20
+    },
+    {
+      "id": 8474151,
+      "name": "Ryan McDonagh",
+      "position": "D",
+      "nationality": "USA",
+      "jersey_number": 27,
+      "birth_date": "1989-06-13",
+      "height": "6'1\"",
+      "weight": 216,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 4,
+        "assists": 27,
+        "points": 31,
+        "games_played": 82
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 3,
+        "points": 3,
+        "games_played": 5
+      },
+      "games_played": 87,
+      "goals": 4,
+      "assists": 30,
+      "points": 34
+    },
+    {
+      "id": 8482655,
+      "name": "J.J. Moser",
+      "position": "D",
+      "nationality": "CHE",
+      "jersey_number": 90,
+      "birth_date": "2000-06-06",
+      "height": "6'2\"",
+      "weight": 183,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 2,
+        "assists": 12,
+        "points": 14,
+        "games_played": 54
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 5
+      },
+      "games_played": 59,
+      "goals": 2,
+      "assists": 12,
+      "points": 14
+    },
+    {
+      "id": 8480246,
+      "name": "Nick Perbix",
+      "position": "D",
+      "nationality": "USA",
+      "jersey_number": 48,
+      "birth_date": "1998-06-15",
+      "height": "6'4\"",
+      "weight": 206,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 6,
+        "assists": 13,
+        "points": 19,
+        "games_played": 74
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 1,
+        "points": 1,
+        "games_played": 5
+      },
+      "games_played": 79,
+      "goals": 6,
+      "assists": 14,
+      "points": 20
+    },
+    {
+      "id": 8478178,
+      "name": "Darren Raddysh",
+      "position": "D",
+      "nationality": "CAN",
+      "jersey_number": 43,
+      "birth_date": "1996-02-28",
+      "height": "6'1\"",
+      "weight": 202,
+      "handedness": "R",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 6,
+        "assists": 31,
+        "points": 37,
+        "games_played": 73
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 4
+      },
+      "games_played": 77,
+      "goals": 6,
+      "assists": 31,
+      "points": 37
+    },
+    {
+      "id": 8477992,
+      "name": "Jonas Johansson",
+      "position": "G",
+      "nationality": "SWE",
+      "jersey_number": 31,
+      "birth_date": "1995-09-19",
+      "height": "6'5\"",
+      "weight": 220,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 19
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 0
+      },
+      "games_played": 19,
+      "goals": 0,
+      "assists": 0,
+      "points": 0
+    },
+    {
+      "id": 8476883,
+      "name": "Andrei Vasilevskiy",
+      "position": "G",
+      "nationality": "RUS",
+      "jersey_number": 88,
+      "birth_date": "1994-07-25",
+      "height": "6'4\"",
+      "weight": 223,
+      "handedness": "L",
+      "active_status": true,
+      "team_id": 26,
+      "regular_season_stats": {
+        "goals": 0,
+        "assists": 2,
+        "points": 2,
+        "games_played": 63
+      },
+      "playoff_stats": {
+        "goals": 0,
+        "assists": 0,
+        "points": 0,
+        "games_played": 5
+      },
+      "games_played": 68,
+      "goals": 0,
+      "assists": 2,
+      "points": 2
+    }
+  ],
+  "season": "2024-25",
+  "team_code": "TBL",
+  "generated_at": "2026-03-18T12:33:23.005109",
+  "data_source": "NHL Official APIs - 2024-25 Historical Roster"
+}
