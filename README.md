@@ -2,6 +2,8 @@
 
 A full-stack web application for managing hockey players and teams, built to showcase modern web development skills with complete CRUD operations, advanced search and filtering, comprehensive statistics tracking, responsive design, and production-ready features including caching, rate limiting, and request logging.
 
+🌐 **Live Site:** https://hockey.daultonb.com
+
 ## 🏒 Features
 
 ### Player Management
