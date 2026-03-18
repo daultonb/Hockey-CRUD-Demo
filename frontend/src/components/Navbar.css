@@ -33,7 +33,10 @@
 }
 
 .navbar-brand .brand-icon {
-  background: var(--gradient-primary, linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%));
+  background: var(
+    --gradient-primary,
+    linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%)
+  );
   color: var(--color-white, #fff);
   width: 40px;
   height: 40px;
@@ -87,7 +90,10 @@
 
 .nav-link.active {
   color: #fff;
-  background: var(--gradient-primary, linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%));
+  background: var(
+    --gradient-primary,
+    linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%)
+  );
   box-shadow: var(--shadow-primary, 0 4px 15px rgba(128, 128, 128, 0.3));
 }
 

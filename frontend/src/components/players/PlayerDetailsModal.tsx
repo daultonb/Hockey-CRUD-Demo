@@ -77,9 +77,7 @@ const PlayerDetailsModal: React.FC<PlayerDetailsModalProps> = ({
             </div>
             <div className="info-item">
               <span className="info-label">Team:</span>
-              <span className="info-value">
-                {player.team.city} {player.team.name}
-              </span>
+              <span className="info-value">{player.team.name}</span>
             </div>
             <div className="info-item">
               <span className="info-label">Nationality:</span>

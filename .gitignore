@@ -61,6 +61,7 @@ frontend/.env.production.local
 *.swp
 *.swo
 *~
+.claude/
 
 # OS files
 .DS_Store
@@ -123,4 +124,3 @@ dist
 .out
 .storybook-out
 backend/.coverage
-.claude/settings.local.json
