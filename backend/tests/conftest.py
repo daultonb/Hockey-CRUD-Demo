@@ -21,6 +21,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session, sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from app.auth import require_api_key
 from app.database import Base, get_db
 from app.main import app
 from app.models.player import Player
@@ -331,11 +332,9 @@ def specific_test_players(test_db: Session, sample_teams: list[Team]) -> list[Pl
 def client(test_engine):
     """
     Create FastAPI test client for endpoint testing.
-    Overrides the database dependency to use the test database.
-    Includes the admin API key header for authenticated endpoints.
+    Overrides the database and auth dependencies to use the test database
+    and bypass API key authentication.
     """
-    from app.config import settings
-
     testing_session_local = sessionmaker(
         autocommit=False, autoflush=False, bind=test_engine
     )
@@ -347,11 +346,12 @@ def client(test_engine):
         finally:
             db.close()
 
+    async def override_require_api_key():
+        return None  # Auth is bypassed in tests
+
     app.dependency_overrides[get_db] = override_get_db
-    headers = {}
-    if settings.admin_api_key:
-        headers["X-API-Key"] = settings.admin_api_key
-    yield TestClient(app, headers=headers)
+    app.dependency_overrides[require_api_key] = override_require_api_key
+    yield TestClient(app)
     app.dependency_overrides.clear()
 
 
